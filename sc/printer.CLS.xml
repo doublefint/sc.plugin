@@ -13,7 +13,7 @@ Output messages </Description>
 </Parameter>
 
 <Property name="device">
-<InitialExpression>0</InitialExpression>
+<InitialExpression>$io</InitialExpression>
 </Property>
 
 <Method name="%OnNew">
@@ -21,7 +21,7 @@ Output messages </Description>
 test
 This callback method is invoked by the <METHOD>%New</METHOD> method to 
 provide notification that a new instance of an object is being created.]]></Description>
-<FormalSpec>device</FormalSpec>
+<FormalSpec>device=$io</FormalSpec>
 <Private>1</Private>
 <ReturnType>%Status</ReturnType>
 <ServerOnly>1</ServerOnly>
@@ -39,7 +39,7 @@ provide notification that a new instance of an object is being created.]]></Desc
 	s custom = ##class(options).printer()
 	Q:custom="" printer
 	try {
-		s printer = $classmethod( custom, "%New")
+		s printer = $classmethod( custom, "%New",$io)
 	} catch {
 		s printer = ..%New($io)
 	}
