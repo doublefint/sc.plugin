@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="sc.plugin">
+<Description>
+[s]ource [c]ontrol plugin for InterSystems Caché (testing in v.2016.1) 
+Just export or import to/from filesystem. Nothing more.</Description>
+<Super>%Studio.SourceControl.Base</Super>
+<TimeCreated>63294,56897.842943</TimeCreated>
+
+<Parameter name="Flags">
+<Description><![CDATA[
+Just sync.
+<li>1 : Present dialog on check in</li>
+<li>2 : Present dialog on check out</li>
+<li>3 : Ask to add new item to source control</li>
+<li>4 : Ask to remove deleted item from source control</li></ul>]]></Description>
+<Type>STRING</Type>
+<Default>0000</Default>
+</Parameter>
+
+<Method name="OnBeforeLoad">
+<Description>
+Import the file from the external format into Cache.
+This is called before the actual load of data to give the chance
+to load the item from an external format.</Description>
+<FormalSpec>code:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[    Q ##class(handler).on( "beforeload", code )
+]]></Implementation>
+</Method>
+
+<Method name="OnAfterSave">
+<Description>
+Called when Studio save something</Description>
+<FormalSpec>code:%String,obj:%RegisteredObject=$$$NULLOREF</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[    Q ##class(sc.handler).on( "aftersave" , code )
+]]></Implementation>
+</Method>
+
+<Method name="OnAfterCompile">
+<Description>
+Called when Studio compile code and some parts of code may be changed
+class storage, for example</Description>
+<FormalSpec>code:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[    Q ##class(sc.handler).on( "aftercompile", code )
+]]></Implementation>
+</Method>
+
+<Method name="OnAfterDelete">
+<Description>
+Called when Studio delete code</Description>
+<FormalSpec>code:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[ 	Q ##class(sc.handler).on( "afterdelete", code )
+]]></Implementation>
+</Method>
+
+<Method name="install">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>ns=$namespace</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	s sc = ##class(%Studio.SourceControl.Interface).SourceControlClassSet( $classname(), ns )
+	s sc = sc && ##class(sc.options).init()
+	Q sc
+]]></Implementation>
+</Method>
+
+<Method name="uninstall">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>ns=$namespace</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	s sc = ##class(%Studio.SourceControl.Interface).SourceControlClassSet( "", ns )
+	Q sc
+]]></Implementation>
+</Method>
+</Class>
+</Export>
