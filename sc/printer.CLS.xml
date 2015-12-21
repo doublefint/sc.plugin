@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="sc.printer">
+<Description>
+Output messages </Description>
+<Super>%RegisteredObject</Super>
+<TimeCreated>63890,50155.078667</TimeCreated>
+
+<Parameter name="LOG">
+<Description>
+1 - main, 2 - warning, 3 - trace</Description>
+<Default>2</Default>
+</Parameter>
+
+<Property name="device">
+<InitialExpression>0</InitialExpression>
+</Property>
+
+<Method name="%OnNew">
+<Description><![CDATA[
+test
+This callback method is invoked by the <METHOD>%New</METHOD> method to 
+provide notification that a new instance of an object is being created.]]></Description>
+<FormalSpec>device</FormalSpec>
+<Private>1</Private>
+<ReturnType>%Status</ReturnType>
+<ServerOnly>1</ServerOnly>
+<Implementation><![CDATA[
+	s ..device = device 
+	Q 1
+]]></Implementation>
+</Method>
+
+<Method name="new">
+<ClassMethod>1</ClassMethod>
+<ReturnType>printer</ReturnType>
+<Implementation><![CDATA[
+	s printer = ..%New($io) 
+	s custom = ##class(options).printer()
+	Q:custom="" printer
+	try {
+		s printer = $classmethod( custom, "%New")
+	} catch {
+		s printer = ..%New($io)
+	}
+	Q printer
+]]></Implementation>
+</Method>
+
+<Method name="w">
+<FormalSpec>msg</FormalSpec>
+<Implementation><![CDATA[
+	s io = $io	
+	use ..device w !,"** ", msg
+	use io
+]]></Implementation>
+</Method>
+
+<Method name="error">
+<FormalSpec>msg</FormalSpec>
+<Implementation><![CDATA[	d ..w(msg)
+]]></Implementation>
+</Method>
+
+<Method name="warn">
+<FormalSpec>msg</FormalSpec>
+<Implementation><![CDATA[	d:(..#LOG>=2) ..w(msg)
+]]></Implementation>
+</Method>
+
+<Method name="trace">
+<FormalSpec>msg</FormalSpec>
+<Implementation><![CDATA[	d:(..#LOG>=3) ..w(msg)
+]]></Implementation>
+</Method>
+</Class>
+</Export>
