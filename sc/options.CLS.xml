@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="sc.options">
+<Description>
+options for sc.plugin</Description>
+<Abstract>1</Abstract>
+<TimeCreated>63898,78035.606329</TimeCreated>
+
+<Method name="storage">
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[	Q "^sc"
+]]></Implementation>
+</Method>
+
+<Method name="get">
+<Description>
+get settings</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>key,default=""</FormalSpec>
+<Implementation><![CDATA[
+	s storage = ..storage(), key = $g(key)
+	Q:key="" $g(@storage, default)
+	Q $g(@storage@(key), default)
+]]></Implementation>
+</Method>
+
+<Method name="set">
+<Description>
+save settings - return settings value after save</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>key,val</FormalSpec>
+<Implementation><![CDATA[
+	s key = $g(key), val = $g(val)
+	s storage = ..storage()
+	if key = "" { 
+		s @storage = val
+	} else {
+		s @storage@(key) = val
+	}
+	Q ..get(key)
+]]></Implementation>
+</Method>
+
+<Method name="workdir">
+<Description>
+set or get working directory
+by default - current namespace database directory</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>workdir</FormalSpec>
+<Implementation><![CDATA[
+	if $d( workdir ){
+		Q ..set( "", workdir )			
+	}
+	Q ..get( "", $zu(12,"") )
+]]></Implementation>
+</Method>
+
+<Method name="handlers">
+<Description><![CDATA[
+get or set handlers for event
+<var>handlers</var> - comma-separated value, for example:
+("aftercompile") = "sc.handler,test.sctestrunner"]]></Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>ext,handlers</FormalSpec>
+<Implementation><![CDATA[
+	Q:'$d(ext) ""
+	
+	s storage = ..storage(), key = "ext"
+	
+	s:$d( handlers ) @storage@( key, ext ) = handlers ;set mode
+	
+	s handlers = $g( @storage@( key, ext ) ) ;get mode
+	
+	Q handlers
+]]></Implementation>
+</Method>
+
+<Method name="printer">
+<Description>
+get or set classname for printer</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>printer</FormalSpec>
+<Implementation><![CDATA[
+	s storage = ..storage(), key = "printer"
+	s:$d(printer) @storage@(key) = printer
+	Q $g(@storage@(key))
+]]></Implementation>
+</Method>
+
+<Method name="init">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	d ..workdir( ..workdir() )
+	d ..handlers( "CLS", "sc.handler" )
+	d ..handlers( "MAC", "sc.handler.rtn" ) 
+	d ..handlers( "INT", "sc.handler.rtn" )
+	d ..handlers( "INC", "sc.handler.rtn" )
+	d ..handlers( "DFI", "sc.handler.dfi" )
+	d ..printer( "sc.printer" )
+	Q 1
+]]></Implementation>
+</Method>
+
+<Method name="dump">
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[
+	s storage = ..storage()
+	zw @storage
+]]></Implementation>
+</Method>
+</Class>
+</Export>
