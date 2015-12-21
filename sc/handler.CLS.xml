@@ -70,7 +70,7 @@ Read settings and run event handlers</Description>
 	
 	if ( list = "" ) {
 		
-		s msg = event _ "( " _ code _" ) . Warning: handlers for '"_ext_"' not set!"
+		s msg = event _ "( " _ code _" ). Warning: handlers for '"_ext_"' not set!"
 		d printer.warn( msg )
 		Q 1
 		
