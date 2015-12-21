@@ -1,1 +1,1 @@
-sc.plugin 
+extendable source control plugin
