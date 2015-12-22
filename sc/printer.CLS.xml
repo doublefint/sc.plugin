@@ -48,10 +48,10 @@ provide notification that a new instance of an object is being created.]]></Desc
 </Method>
 
 <Method name="w">
-<FormalSpec>msg</FormalSpec>
+<FormalSpec>msg,sc=""</FormalSpec>
 <Implementation><![CDATA[
 	s io = $io	
-	use ..device w !,"** ", msg
+	use ..device w !,"** ", msg w:sc'="" " ", $S(+sc=1: "Ok!", 1:"FAIL")
 	use io
 ]]></Implementation>
 </Method>
