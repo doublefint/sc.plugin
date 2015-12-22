@@ -2,7 +2,7 @@
 <Export generator="Cache" version="25">
 <Class name="sc.handler">
 <Description>
-handler for CLS</Description>
+handler for CLS - export *.cls into *.CLS.xml format</Description>
 <Super>%RegisteredObject</Super>
 <TimeCreated>63890,65741.138899</TimeCreated>
 
@@ -146,6 +146,7 @@ Read settings and run event handlers</Description>
 <Method name="workdir">
 <Description>
 Base directory for export</Description>
+<ProcedureBlock>0</ProcedureBlock>
 <Implementation><![CDATA[ Q ##class(sc.options).workdir()
 ]]></Implementation>
 </Method>
@@ -202,7 +203,7 @@ file mask for import </Description>
 
 <Method name="ignore">
 <Description>
-return true for ignore event</Description>
+return true for ignore code</Description>
 <ReturnType>%Boolean</ReturnType>
 <Implementation><![CDATA[
 	Q:$e(..code)="%" 1 ;ignore system classes
