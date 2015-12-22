@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="sc.ud.mac">
+<Super>sc.ud.int</Super>
+<TimeCreated>63908,63257.740283</TimeCreated>
+
+<Method name="workdir">
+<Description>
+Base directory for export</Description>
+<ProcedureBlock>0</ProcedureBlock>
+<Implementation><![CDATA[ Q ##class(sc.options).workdir() _ "\_RTN"
+]]></Implementation>
+</Method>
+</Class>
+</Export>

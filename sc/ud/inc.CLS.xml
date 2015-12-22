@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="sc.ud.inc">
+<Super>sc.ud.int</Super>
+<TimeCreated>63908,63119.759281</TimeCreated>
+
+<Method name="filemask">
+<Description>
+file mask for import </Description>
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[	Q "*.xml"
+]]></Implementation>
+</Method>
+
+<Method name="workdir">
+<Description>
+Base directory for export</Description>
+<ProcedureBlock>0</ProcedureBlock>
+<Implementation><![CDATA[ Q ##class(sc.options).workdir() _"\_INC"
+]]></Implementation>
+</Method>
+</Class>
+</Export>

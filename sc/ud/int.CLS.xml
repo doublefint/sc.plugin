@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="sc.ud.int">
+<Description>
+save into _int subdirectory of workdir</Description>
+<Super>sc.routines</Super>
+<TimeCreated>63908,62447.988135</TimeCreated>
+
+<Method name="filemask">
+<Description>
+file mask for import </Description>
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[	Q "*.xml"
+]]></Implementation>
+</Method>
+
+<Method name="workdir">
+<Description>
+Base directory for export</Description>
+<ProcedureBlock>0</ProcedureBlock>
+<Implementation><![CDATA[ Q ##class(sc.options).workdir() _ "\_INT"
+]]></Implementation>
+</Method>
+
+<Method name="filename">
+<Description>
+convert code name to file name, packages translate as directories</Description>
+<Implementation><![CDATA[
+	
+	s name = ..name
+	s namelen = $l( name, "." )
+	s hasPackage = ( namelen > 1 )  
+	s ext = ..ext
+		
+	s dir = ..workdir(), path = ""
+		
+	if ( hasPackage ) { ;myPackage.myClass.CLS or test.MAC
+		
+		s packages = $p( name, ".", 1, namelen - 1 )
+		s dm = "\" ; $$$IsWINDOWS
+		s path = $tr( packages, ".", dm )
+		
+		s:packages'="" dir = dir _ dm _ path
+		
+		s name = $p( name, ".", namelen  )
+		
+	}
+	
+	s sc = ##class(%File).CreateDirectoryChain( dir ) ;need for (%File).NormalizeFilename
+	s file = name _ ".xml" 
+	Q ##class(%File).NormalizeFilename( file, dir )
+]]></Implementation>
+</Method>
+</Class>
+</Export>

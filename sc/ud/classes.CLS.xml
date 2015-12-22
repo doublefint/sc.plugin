@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="sc.ud.classes">
+<Description>
+Example of customizing file export - folder structure like in NLMLIB.SourceControl (@PavelCrehula.sz)</Description>
+<Super>sc.classes</Super>
+<TimeCreated>63908,61983.076185</TimeCreated>
+
+<Method name="workdir">
+<Description>
+Base directory for export</Description>
+<ProcedureBlock>0</ProcedureBlock>
+<Implementation><![CDATA[ Q ##super()_"\_CLS"
+]]></Implementation>
+</Method>
+
+<Method name="filemask">
+<Description>
+file mask for import </Description>
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[	Q "*.xml"
+]]></Implementation>
+</Method>
+
+<Method name="filename">
+<Description>
+convert code name to file name, packages translate as directories</Description>
+<Implementation><![CDATA[
+	
+	s name = ..name
+	s namelen = $l( name, "." )
+	s hasPackage = ( namelen > 1 )  
+	s ext = ..ext
+	s dm = "\" ; $$$IsWINDOWS	
+	s dir = ..workdir()
+		
+	if ( hasPackage ) { ;myPackage.myClass.CLS or test.MAC
+		
+		s packages = $p( name, ".", 1, namelen - 1 )
+		s path = $tr( packages, ".", dm )
+		s:packages'="" dir = dir _ dm _ path
+		s name = $p( name, ".", namelen  )
+		
+	}
+	
+	s sc = ##class(%File).CreateDirectoryChain( dir ) ;need for (%File).NormalizeFilename
+	s file = name _ ".xml"
+	Q ##class(%File).NormalizeFilename( file, dir )
+]]></Implementation>
+</Method>
+</Class>
+</Export>
