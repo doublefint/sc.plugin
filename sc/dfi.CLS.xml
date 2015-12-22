@@ -115,5 +115,52 @@ BI - virtual folder</Description>
 	Q ##class(%File).NormalizeFilename( file, dir )
 ]]></Implementation>
 </Method>
+
+<Method name="filemask">
+<Description>
+file mask for import </Description>
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[	Q "*.DFI.xml"
+]]></Implementation>
+</Method>
+
+<Method name="exportAll">
+<Description>
+Initial export classes and routines</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	
+	s printer = ##class(sc.printer).new()
+	s handler = ..%New( "", "exportAll", printer )
+    
+    s sql = "Select documentName From %DeepSee_UserLibrary.FolderItem"
+    s rs = ##class(%SQL.Statement).%ExecDirect(,sql)
+    
+	s sc = $$$OK
+    while rs.%Next() { 
+       
+      s handler.code = rs.documentName
+      if ( handler.ignore() ) {
+	  	continue     
+	  }
+      
+      s sc = handler.export() Q:'sc
+      
+      d printer.w( handler.code _ " -> " _ handler.filename(), sc )
+      
+    }
+	
+	Q sc
+]]></Implementation>
+</Method>
+
+<Method name="ignore">
+<Description>
+return 1 for ignore code</Description>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[	Q 0
+]]></Implementation>
+</Method>
 </Class>
 </Export>
