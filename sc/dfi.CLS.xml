@@ -47,13 +47,6 @@ collect information about dfi document</Description>
 ]]></Implementation>
 </Method>
 
-<Method name="export">
-<FormalSpec>filename</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[	Q ##class(%DeepSee.UserLibrary.Utils).%Export( ..fullName, filename, 0 )
-]]></Implementation>
-</Method>
-
 <Method name="tsCode">
 <Description>
 return local timestamp of DFI document</Description>
@@ -77,6 +70,13 @@ return local timestamp of DFI document</Description>
 		s ..code = loaded( 1 ) _ ".DFI"
 	}
 	Q sc
+]]></Implementation>
+</Method>
+
+<Method name="export">
+<FormalSpec>filename=..filename()</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	Q ##class(%DeepSee.UserLibrary.Utils).%Export( ..fullName, filename, 0 )
 ]]></Implementation>
 </Method>
 

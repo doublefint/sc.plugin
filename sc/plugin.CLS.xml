@@ -25,7 +25,9 @@ This is called before the actual load of data to give the chance
 to load the item from an external format.</Description>
 <FormalSpec>code:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[    Q ..on( "beforeload", code )
+<Implementation><![CDATA[
+	s ..Modified = 0 ;workaround for error in %Studio.AbstractDocument:SaveStream()+16 
+    Q ..on( "beforeload", code )
 ]]></Implementation>
 </Method>
 
