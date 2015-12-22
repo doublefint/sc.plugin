@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2016.1 (Build 596U)" ts="2015-12-22 18:35:44">
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2016.1 (Build 596U)" ts="2015-12-22 22:52:10">
 <Class name="sc.classes">
 <Description>
 export/import *.cls documents into/from xml files ( *.CLS.xml )</Description>
@@ -365,7 +365,7 @@ Initial export classes and routines</Description>
 Work with *.dfi documents
 %DeepSee.UserLibrary.FolderItem</Description>
 <Super>sc.classes</Super>
-<TimeChanged>63908,55852.728875</TimeChanged>
+<TimeChanged>63908,79467.597903</TimeChanged>
 <TimeCreated>63899,52452.524809</TimeCreated>
 
 <Method name="codeSet">
@@ -474,6 +474,53 @@ BI - virtual folder</Description>
 	s file = name _ "."_ ext _ ".xml"
 	
 	Q ##class(%File).NormalizeFilename( file, dir )
+]]></Implementation>
+</Method>
+
+<Method name="filemask">
+<Description>
+file mask for import </Description>
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[	Q "*.DFI.xml"
+]]></Implementation>
+</Method>
+
+<Method name="exportAll">
+<Description>
+Initial export classes and routines</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	
+	s printer = ##class(sc.printer).new()
+	s handler = ..%New( "", "exportAll", printer )
+    
+    s sql = "Select documentName From %DeepSee_UserLibrary.FolderItem"
+    s rs = ##class(%SQL.Statement).%ExecDirect(,sql)
+    
+	s sc = $$$OK
+    while rs.%Next() { 
+       
+      s handler.code = rs.documentName
+      if ( handler.ignore() ) {
+	  	continue     
+	  }
+      
+      s sc = handler.export() Q:'sc
+      
+      d printer.w( handler.code _ " -> " _ handler.filename(), sc )
+      
+    }
+	
+	Q sc
+]]></Implementation>
+</Method>
+
+<Method name="ignore">
+<Description>
+return 1 for ignore code</Description>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[	Q 0
 ]]></Implementation>
 </Method>
 </Class>
