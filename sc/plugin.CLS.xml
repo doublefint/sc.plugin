@@ -40,11 +40,12 @@ Called when Studio save something</Description>
 
 <Method name="OnAfterCompile">
 <Description>
-Called when Studio compile code and some parts of code may be changed
-class storage, for example</Description>
+Called when Studio compile code 
+and some parts of code may be changed
+for example - storage scheme</Description>
 <FormalSpec>code:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[    Q ##class(sc.handler).on( "aftercompile", code )
+<Implementation><![CDATA[    Q ##class(sc.handler).on( "aftercompile", code ) ;only for additional export
 ]]></Implementation>
 </Method>
 
