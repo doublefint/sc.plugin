@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2016.1 (Build 596U)" ts="2015-12-22 00:14:51">
-<Class name="sc.handler">
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2016.1 (Build 596U)" ts="2015-12-22 16:42:40">
+<Class name="sc.classes">
 <Description>
-handler for CLS</Description>
+export/import *.cls documents into/from xml files ( *.CLS.xml )</Description>
 <Super>%RegisteredObject</Super>
-<TimeChanged>63908,809.019787</TimeChanged>
+<TimeChanged>63908,54009.451274</TimeChanged>
 <TimeCreated>63890,65741.138899</TimeCreated>
 
 <Property name="event">
@@ -110,7 +110,9 @@ Read settings and run event handlers</Description>
 	s filename = ..filename()
 	
 	if ..event = "afterdelete" {
-		Quit ..fileDelete( filename )
+		s sc = ..fileDelete( filename )
+		d ..printer.w( "Delete " _ filename, sc )
+		Q sc
 	}
 	
 	#; change events  - beforeload, aftersave, aftercompile
@@ -147,6 +149,7 @@ Read settings and run event handlers</Description>
 <Method name="workdir">
 <Description>
 Base directory for export</Description>
+<ProcedureBlock>0</ProcedureBlock>
 <Implementation><![CDATA[ Q ##class(sc.options).workdir()
 ]]></Implementation>
 </Method>
@@ -203,10 +206,12 @@ file mask for import </Description>
 
 <Method name="ignore">
 <Description>
-return true for ignore event</Description>
+return true for ignore code</Description>
 <ReturnType>%Boolean</ReturnType>
 <Implementation><![CDATA[
 	Q:$e(..code)="%" 1 ;ignore system classes
+	Q:##class(%RoutineMgr).IsGenerated( ..code ) 1 ;ignore generated classes (from csp.page)
+	Q:##class(%RoutineMgr).IsClassGenerated( ..name ) 1 ;ignore generated classes (from csp.page)
 	Q:$p(..code,".")="INFORMATION" 1  ;ignore SQL-STANDART classes 
 	Q 0
 ]]></Implementation>
@@ -295,8 +300,9 @@ Initial export classes and routines</Description>
 	  	continue     
 	  }
       
-      s scc = handler.export()
-      d $system.Status.AppendStatus( sc, scc )
+      s sc = handler.export() Q:'sc
+      
+      d printer.w( handler.code _ " -> " _ handler.filename(), sc )
       
     }
 	
@@ -308,7 +314,7 @@ Initial export classes and routines</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	s mask = ..filemask(), workdir = ##class(options).workdir()
+	s mask = ..filemask(), workdir = ##class(sc.options).workdir()
 	s printer = ##class(sc.printer).new()
 	s sc =  ..importDir( workdir, mask, printer, .loaded )
 	Q $system.OBJ.CompileList( .loaded, "ckbr-d/multicompile" )
@@ -333,11 +339,9 @@ Initial export classes and routines</Description>
 		
 		s handler = ..%New( "", "importAll", printer )
 		s sc = handler.import( rs.Name, "k-d" ) ;"k-d" - load only
+		d printer.w( rs.Name _ " -> " _ handler.code , sc )
 		
-		if ( 'sc ) {
-			d printer.error(" Fail import " _ rs.Name )
-			Q 
-		}
+		if ( 'sc ) Quit 
 		
 		s loaded( handler.code )="" ;save name of loaded document
 				
@@ -356,12 +360,63 @@ Initial export classes and routines</Description>
 </Class>
 
 
-<Class name="sc.handler.dfi">
+<Class name="sc.classes.udl">
+<Description>
+export classes as plain text</Description>
+<Super>sc.classes</Super>
+<TimeChanged>63908,54289.835999</TimeChanged>
+<TimeCreated>63904,60106.89866</TimeCreated>
+
+<Method name="export">
+<FormalSpec>filename</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	
+	/*
+	
+	s file = ##class(%File).%New( filename )
+	s sc = file.Open( "WNUK\UTF8\" )  if 'sc {
+		d ..w( $classname()_": can't open file '"_filename_"' for export" )
+		Q sc	
+	}
+	
+	s sc = ##class(%Compiler.UDL.TextServices).GetTextAsStream( , name, .file ) 
+	
+	Q file.%Save()
+	*/
+	
+	Q $system.OBJ.Export( ..code, filename, "-d/diffexport" )
+]]></Implementation>
+</Method>
+
+<Method name="import">
+<FormalSpec>filename</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+ /*
+ 	s file = ##class(%File).%New( filename )
+	s sc = file.Open("RUK\UTF8\") Q:'sc sc 
+	
+	if ( ..ext() = "CLS" ) {
+		s sc = ##class(%Compiler.UDL.TextServices).SetTextFromStream( , ..name(), file )
+	}
+ */
+
+
+	s sc = $system.OBJ.Load( filename, "ck-d", .err, .list )
+	s:sc ..code = list
+	Q sc
+]]></Implementation>
+</Method>
+</Class>
+
+
+<Class name="sc.dfi">
 <Description>
 Work with *.dfi documents
 %DeepSee.UserLibrary.FolderItem</Description>
-<Super>sc.handler</Super>
-<TimeChanged>63908,781</TimeChanged>
+<Super>sc.classes</Super>
+<TimeChanged>63908,55852.728875</TimeChanged>
 <TimeCreated>63899,52452.524809</TimeCreated>
 
 <Method name="codeSet">
@@ -387,6 +442,8 @@ Work with *.dfi documents
 </Property>
 
 <Method name="getData">
+<Description>
+collect information about dfi document</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec><![CDATA[code,&data]]></FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -399,13 +456,6 @@ Work with *.dfi documents
 		s data("fullName") = rs.fullName
 	}	
 	Q 1
-]]></Implementation>
-</Method>
-
-<Method name="export">
-<FormalSpec>filename</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[	Q ##class(%DeepSee.UserLibrary.Utils).%Export( ..fullName, filename, 0 )
 ]]></Implementation>
 </Method>
 
@@ -432,6 +482,13 @@ return local timestamp of DFI document</Description>
 		s ..code = loaded( 1 ) _ ".DFI"
 	}
 	Q sc
+]]></Implementation>
+</Method>
+
+<Method name="export">
+<FormalSpec>filename=..filename()</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	Q ##class(%DeepSee.UserLibrary.Utils).%Export( ..fullName, filename, 0 )
 ]]></Implementation>
 </Method>
 
@@ -473,51 +530,11 @@ BI - virtual folder</Description>
 </Class>
 
 
-<Class name="sc.handler.rtn">
-<Description>
-For MAC,INT,INC</Description>
-<Super>sc.handler</Super>
-<TimeChanged>63908,781</TimeChanged>
-<TimeCreated>63902,60823.714383</TimeCreated>
-
-<Method name="exportAll">
-<ClassMethod>1</ClassMethod>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-
-	#; RoutineListFunc - method generated by Cache for class query RoutineList
-	s rs = ##class(%Routine).RoutineListFunc() 
-	s sc = $$$OK, printer = ##class(sc.printer).new()
-	while rs.%Next(){
-		
-		s handler = ..%New( "exportAll", rs.name, printer )
-		s sch = handler.export()
-		d $system.Status.AppendStatus( sc, sch )
-		
-	}
-	
-	Q sc
-]]></Implementation>
-</Method>
-
-<Method name="tsCode">
-<Description>
-Return %TimeStamp of class  </Description>
-<ReturnType>%TimeStamp</ReturnType>
-<Implementation><![CDATA[
-	s ts = ##class(%RoutineMgr).TS( ..code ) 
-	s tsh = $zdth(ts,3)
-	Q $zdt(tsh,3,,0)
-]]></Implementation>
-</Method>
-</Class>
-
-
 <Class name="sc.options">
 <Description>
 options for sc.plugin</Description>
 <Abstract>1</Abstract>
-<TimeChanged>63907,85354</TimeChanged>
+<TimeChanged>63908,53669.53331</TimeChanged>
 <TimeCreated>63898,78035.606329</TimeCreated>
 
 <Method name="storage">
@@ -606,11 +623,11 @@ get or set classname for printer</Description>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	d ..workdir( ..workdir() )
-	d ..handlers( "CLS", "sc.handler" )
-	d ..handlers( "MAC", "sc.handler.rtn" ) 
-	d ..handlers( "INT", "sc.handler.rtn" )
-	d ..handlers( "INC", "sc.handler.rtn" )
-	d ..handlers( "DFI", "sc.handler.dfi" )
+	d ..handlers( "CLS", "sc.classes" )
+	d ..handlers( "MAC", "sc.routines" ) 
+	d ..handlers( "INT", "sc.routines" )
+	d ..handlers( "INC", "sc.routines" )
+	d ..handlers( "DFI", "sc.dfi" )
 	d ..printer( "sc.printer" )
 	Q 1
 ]]></Implementation>
@@ -631,7 +648,7 @@ get or set classname for printer</Description>
 [s]ource [c]ontrol plugin for InterSystems Caché (testing in v.2016.1) 
 Just export or import to/from filesystem. Nothing more.</Description>
 <Super>%Studio.SourceControl.Base</Super>
-<TimeChanged>63907,85574.584763</TimeChanged>
+<TimeChanged>63908,59181.50913</TimeChanged>
 <TimeCreated>63294,56897.842943</TimeCreated>
 
 <Parameter name="Flags">
@@ -652,7 +669,9 @@ This is called before the actual load of data to give the chance
 to load the item from an external format.</Description>
 <FormalSpec>code:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[    Q ##class(handler).on( "beforeload", code )
+<Implementation><![CDATA[
+	s ..Modified = 0 ;workaround for error in %Studio.AbstractDocument:SaveStream()+16 
+    Q ..on( "beforeload", code )
 ]]></Implementation>
 </Method>
 
@@ -661,17 +680,18 @@ to load the item from an external format.</Description>
 Called when Studio save something</Description>
 <FormalSpec>code:%String,obj:%RegisteredObject=$$$NULLOREF</FormalSpec>
 <ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[    Q ##class(sc.handler).on( "aftersave" , code )
+<Implementation><![CDATA[    Q ..on( "aftersave" , code )
 ]]></Implementation>
 </Method>
 
 <Method name="OnAfterCompile">
 <Description>
-Called when Studio compile code and some parts of code may be changed
-class storage, for example</Description>
+Called when Studio compile code 
+and some parts of code may be changed
+for example - storage scheme</Description>
 <FormalSpec>code:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[    Q ##class(sc.handler).on( "aftercompile", code )
+<Implementation><![CDATA[    Q ..on( "aftercompile", code ) ;only for additional export
 ]]></Implementation>
 </Method>
 
@@ -680,7 +700,14 @@ class storage, for example</Description>
 Called when Studio delete code</Description>
 <FormalSpec>code:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[ 	Q ##class(sc.handler).on( "afterdelete", code )
+<Implementation><![CDATA[ 	Q ..on( "afterdelete", code )
+]]></Implementation>
+</Method>
+
+<Method name="on">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>event,code</FormalSpec>
+<Implementation><![CDATA[	Q ##class(sc.classes).on( event, code )
 ]]></Implementation>
 </Method>
 
@@ -711,7 +738,7 @@ Called when Studio delete code</Description>
 <Description>
 Output messages </Description>
 <Super>%RegisteredObject</Super>
-<TimeChanged>63907,85726.775221</TimeChanged>
+<TimeChanged>63908,29059.830594</TimeChanged>
 <TimeCreated>63890,50155.078667</TimeCreated>
 
 <Parameter name="LOG">
@@ -756,10 +783,10 @@ provide notification that a new instance of an object is being created.]]></Desc
 </Method>
 
 <Method name="w">
-<FormalSpec>msg</FormalSpec>
+<FormalSpec>msg,sc=""</FormalSpec>
 <Implementation><![CDATA[
 	s io = $io	
-	use ..device w !,"** ", msg
+	use ..device w !,"** ", msg w:sc'="" " ", $S(+sc=1: "Ok!", 1:"FAIL")
 	use io
 ]]></Implementation>
 </Method>
@@ -784,17 +811,129 @@ provide notification that a new instance of an object is being created.]]></Desc
 </Class>
 
 
-<Project name="sc_plugin" LastModified="2015-12-21 23:04:23.319664" Target="##class(sc.code).TestNew()" TargetType="2">
+<Class name="sc.routines">
+<Description>
+For MAC,INT,INC</Description>
+<Super>sc.classes</Super>
+<TimeChanged>63908,53946.86485</TimeChanged>
+<TimeCreated>63902,60823.714383</TimeCreated>
+
+<Method name="filemask">
+<Description>
+file mask for import </Description>
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[	Q "*.MAC.xml;*.INT.xml;*.INC.xml"
+]]></Implementation>
+</Method>
+
+<Method name="exportAll">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+
+	#; RoutineListFunc - method generated by Cache for class query RoutineList
+	s rs = ##class(%Routine).RoutineListFunc() 
+	s sc = $$$OK, printer = ##class(sc.printer).new()
+	s handler = ..%New( "", "exportAll",  printer )
+	while ( rs.%Next() ) {
+		
+		s handler.code = rs.Name
+		
+		if ( handler.ignore() ) {
+			continue	
+		}
+		
+		s sc = handler.export()
+		Q:'sc
+		
+		d printer.w( handler.code_" -> "_handler.filename(), sc)
+		
+		
+	}
+	
+	Q sc
+]]></Implementation>
+</Method>
+
+<Method name="tsCode">
+<Description>
+Return %TimeStamp of class  </Description>
+<ReturnType>%TimeStamp</ReturnType>
+<Implementation><![CDATA[
+	s ts = ##class(%RoutineMgr).TS( ..code ) 
+	Q $p( ts, "." ) ;remove milliseconds
+]]></Implementation>
+</Method>
+
+<Method name="ignore">
+<Description>
+return true for ignore code</Description>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	Q:$e(..code)="%" 1 ;ignore system routines
+	Q:##class(%RoutineMgr).IsGenerated( ..code ) 1 ;ignore generated routines
+	Q 0
+]]></Implementation>
+</Method>
+</Class>
+
+
+<Class name="sc.routines.udl">
+<Description>
+routin (*.inc, *.int, *.mac ) as plain text</Description>
+<Super>sc.routines</Super>
+<TimeChanged>63908,53894.778628</TimeChanged>
+<TimeCreated>63904,60497.185236</TimeCreated>
+
+<Method name="import">
+<FormalSpec>filename</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	/*
+		if ##class(%Routine).Exists( ..code ) {
+            s routine = ##class(%Routine).%OpenId( ..code )
+        } else {
+            s routine = ##class(%Routine).%New( ..code )
+        }
+        d routine.Clear() 
+        d routine.CopyFrom( file )
+        s sc = routine.%Save() Q:'sc sc
+
+	*/
+	
+	s sc = $system.OBJ.Load( filename, "ck-d", .err, .list )
+	s:sc ..code = list
+	Q sc
+]]></Implementation>
+</Method>
+
+<Method name="export">
+<FormalSpec>filename</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	/*
+		s sc = file.CopyFrom( ##class(%Routine).%OpenId( code ) ) 
+	*/
+	Q $system.OBJ.Export( ..code, filename, "-d/diffexport" )
+]]></Implementation>
+</Method>
+</Class>
+
+
+<Project name="sc_plugin" LastModified="2015-12-22 15:29:42.791971" Target="##class(sc.handler.rtn).exportAll()" TargetType="2">
   <Items>
-    <ProjectItem name="sc.handler" type="CLS"></ProjectItem>
-    <ProjectItem name="sc.handler.dfi" type="CLS"></ProjectItem>
-    <ProjectItem name="sc.handler.rtn" type="CLS"></ProjectItem>
+    <ProjectItem name="sc.classes" type="CLS"></ProjectItem>
+    <ProjectItem name="sc.classes.udl" type="CLS"></ProjectItem>
+    <ProjectItem name="sc.dfi" type="CLS"></ProjectItem>
     <ProjectItem name="sc.options" type="CLS"></ProjectItem>
     <ProjectItem name="sc.plugin" type="CLS"></ProjectItem>
     <ProjectItem name="sc.printer" type="CLS"></ProjectItem>
+    <ProjectItem name="sc.routines" type="CLS"></ProjectItem>
+    <ProjectItem name="sc.routines.udl" type="CLS"></ProjectItem>
   </Items>
   <BreakPoints>
     <BreakPoint Routine="sc.code.CLS" Offset="TestNew+3"></BreakPoint>
+    <BreakPoint Routine="sc.handler.rtn.CLS" Offset="exportAll+3"></BreakPoint>
   </BreakPoints>
 </Project>
 </Export>
