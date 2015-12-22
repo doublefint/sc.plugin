@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2016.1 (Build 596U)" ts="2015-12-22 16:42:40">
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2016.1 (Build 596U)" ts="2015-12-22 18:35:44">
 <Class name="sc.classes">
 <Description>
 export/import *.cls documents into/from xml files ( *.CLS.xml )</Description>
@@ -360,57 +360,6 @@ Initial export classes and routines</Description>
 </Class>
 
 
-<Class name="sc.classes.udl">
-<Description>
-export classes as plain text</Description>
-<Super>sc.classes</Super>
-<TimeChanged>63908,54289.835999</TimeChanged>
-<TimeCreated>63904,60106.89866</TimeCreated>
-
-<Method name="export">
-<FormalSpec>filename</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	
-	/*
-	
-	s file = ##class(%File).%New( filename )
-	s sc = file.Open( "WNUK\UTF8\" )  if 'sc {
-		d ..w( $classname()_": can't open file '"_filename_"' for export" )
-		Q sc	
-	}
-	
-	s sc = ##class(%Compiler.UDL.TextServices).GetTextAsStream( , name, .file ) 
-	
-	Q file.%Save()
-	*/
-	
-	Q $system.OBJ.Export( ..code, filename, "-d/diffexport" )
-]]></Implementation>
-</Method>
-
-<Method name="import">
-<FormalSpec>filename</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
- /*
- 	s file = ##class(%File).%New( filename )
-	s sc = file.Open("RUK\UTF8\") Q:'sc sc 
-	
-	if ( ..ext() = "CLS" ) {
-		s sc = ##class(%Compiler.UDL.TextServices).SetTextFromStream( , ..name(), file )
-	}
- */
-
-
-	s sc = $system.OBJ.Load( filename, "ck-d", .err, .list )
-	s:sc ..code = list
-	Q sc
-]]></Implementation>
-</Method>
-</Class>
-
-
 <Class name="sc.dfi">
 <Description>
 Work with *.dfi documents
@@ -648,7 +597,7 @@ get or set classname for printer</Description>
 [s]ource [c]ontrol plugin for InterSystems Caché (testing in v.2016.1) 
 Just export or import to/from filesystem. Nothing more.</Description>
 <Super>%Studio.SourceControl.Base</Super>
-<TimeChanged>63908,59181.50913</TimeChanged>
+<TimeChanged>63908,66167.276991</TimeChanged>
 <TimeCreated>63294,56897.842943</TimeCreated>
 
 <Parameter name="Flags">
@@ -661,6 +610,18 @@ Just sync.
 <Type>STRING</Type>
 <Default>0000</Default>
 </Parameter>
+
+<Property name="Modified">
+<Description>
+Workaround for error in %Studio.AbstractDocument:SaveStream()+16 
+in Cache for Windows (x86-64) 2016.1 (Build 596U) Mon Nov 9 2015 21:12:55 EST
+
+If the root node is set to 1 then calls to the source control hooks will keep track if the
+source control hook modifies the document and if it does then it will defined
+%SourceControl.Modified(docname)=1.</Description>
+<Type>%String</Type>
+<MultiDimensional>1</MultiDimensional>
+</Property>
 
 <Method name="OnBeforeLoad">
 <Description>
@@ -716,9 +677,16 @@ Called when Studio delete code</Description>
 <FormalSpec>ns=$namespace</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
+	#; workaround for 2012.2
+	s ^%SYS("SourceControlClass",ns) = $classname()
+	Q 1
+	
+	#; in 2015 
+	/*
 	s sc = ##class(%Studio.SourceControl.Interface).SourceControlClassSet( $classname(), ns )
 	s sc = sc && ##class(sc.options).init()
 	Q sc
+	*/
 ]]></Implementation>
 </Method>
 
@@ -727,8 +695,14 @@ Called when Studio delete code</Description>
 <FormalSpec>ns=$namespace</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
+	#; workaround for 2012.2
+	s ^%SYS("SourceControlClass",ns) = ""
+	Q 1
+	
+	/*
 	s sc = ##class(%Studio.SourceControl.Interface).SourceControlClassSet( "", ns )
 	Q sc
+	*/
 ]]></Implementation>
 </Method>
 </Class>
@@ -878,58 +852,14 @@ return true for ignore code</Description>
 </Class>
 
 
-<Class name="sc.routines.udl">
-<Description>
-routin (*.inc, *.int, *.mac ) as plain text</Description>
-<Super>sc.routines</Super>
-<TimeChanged>63908,53894.778628</TimeChanged>
-<TimeCreated>63904,60497.185236</TimeCreated>
-
-<Method name="import">
-<FormalSpec>filename</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	/*
-		if ##class(%Routine).Exists( ..code ) {
-            s routine = ##class(%Routine).%OpenId( ..code )
-        } else {
-            s routine = ##class(%Routine).%New( ..code )
-        }
-        d routine.Clear() 
-        d routine.CopyFrom( file )
-        s sc = routine.%Save() Q:'sc sc
-
-	*/
-	
-	s sc = $system.OBJ.Load( filename, "ck-d", .err, .list )
-	s:sc ..code = list
-	Q sc
-]]></Implementation>
-</Method>
-
-<Method name="export">
-<FormalSpec>filename</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	/*
-		s sc = file.CopyFrom( ##class(%Routine).%OpenId( code ) ) 
-	*/
-	Q $system.OBJ.Export( ..code, filename, "-d/diffexport" )
-]]></Implementation>
-</Method>
-</Class>
-
-
-<Project name="sc_plugin" LastModified="2015-12-22 15:29:42.791971" Target="##class(sc.handler.rtn).exportAll()" TargetType="2">
+<Project name="sc_plugin" LastModified="2015-12-22 18:35:10.473448" Target="##class(sc.handler.rtn).exportAll()" TargetType="2">
   <Items>
     <ProjectItem name="sc.classes" type="CLS"></ProjectItem>
-    <ProjectItem name="sc.classes.udl" type="CLS"></ProjectItem>
     <ProjectItem name="sc.dfi" type="CLS"></ProjectItem>
     <ProjectItem name="sc.options" type="CLS"></ProjectItem>
     <ProjectItem name="sc.plugin" type="CLS"></ProjectItem>
     <ProjectItem name="sc.printer" type="CLS"></ProjectItem>
     <ProjectItem name="sc.routines" type="CLS"></ProjectItem>
-    <ProjectItem name="sc.routines.udl" type="CLS"></ProjectItem>
   </Items>
   <BreakPoints>
     <BreakPoint Routine="sc.code.CLS" Offset="TestNew+3"></BreakPoint>
