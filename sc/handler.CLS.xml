@@ -299,8 +299,9 @@ Initial export classes and routines</Description>
 	  	continue     
 	  }
       
-      s scc = handler.export()
-      d $system.Status.AppendStatus( sc, scc )
+      s sc = handler.export() Q:'sc
+      
+      d printer.w( handler.code _ " -> " _ handler.filename(), sc )
       
     }
 	
