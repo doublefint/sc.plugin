@@ -25,7 +25,7 @@ This is called before the actual load of data to give the chance
 to load the item from an external format.</Description>
 <FormalSpec>code:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[    Q ##class(handler).on( "beforeload", code )
+<Implementation><![CDATA[    Q ..on( "beforeload", code )
 ]]></Implementation>
 </Method>
 
@@ -34,7 +34,7 @@ to load the item from an external format.</Description>
 Called when Studio save something</Description>
 <FormalSpec>code:%String,obj:%RegisteredObject=$$$NULLOREF</FormalSpec>
 <ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[    Q ##class(sc.handler).on( "aftersave" , code )
+<Implementation><![CDATA[    Q ..on( "aftersave" , code )
 ]]></Implementation>
 </Method>
 
@@ -45,7 +45,7 @@ and some parts of code may be changed
 for example - storage scheme</Description>
 <FormalSpec>code:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[    Q ##class(sc.handler).on( "aftercompile", code ) ;only for additional export
+<Implementation><![CDATA[    Q ..on( "aftercompile", code ) ;only for additional export
 ]]></Implementation>
 </Method>
 
@@ -54,7 +54,14 @@ for example - storage scheme</Description>
 Called when Studio delete code</Description>
 <FormalSpec>code:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[ 	Q ##class(sc.handler).on( "afterdelete", code )
+<Implementation><![CDATA[ 	Q ..on( "afterdelete", code )
+]]></Implementation>
+</Method>
+
+<Method name="on">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>event,code</FormalSpec>
+<Implementation><![CDATA[	Q ##class(sc.classes).on( event, code )
 ]]></Implementation>
 </Method>
 
