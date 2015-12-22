@@ -11,7 +11,7 @@ Testing in Caché v2016, v2012.2
 * _(Optional)_ Setup working directory: `w ##class(sc.options).workdir( "c:\YourWorkingDirectory\" )`
 * _(Optional)_ Export classes: `d ##class(sc.classes).exportAll()`
 * _(Optional)_ Export routines: `d ##class(sc.routines).exportAll()`
-* ~~_(Optional)_ Export DFI documents : `d ##class(sc.dfi).exportAll()`~~ not working yet
+* _(Optional)_ Export DFI documents : `d ##class(sc.dfi).exportAll()`
 * Start Studio
 
 **Extend**:
