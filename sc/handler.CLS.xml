@@ -109,7 +109,9 @@ Read settings and run event handlers</Description>
 	s filename = ..filename()
 	
 	if ..event = "afterdelete" {
-		Quit ..fileDelete( filename )
+		s sc = ..fileDelete( filename )
+		d ..printer.w( "Delete " _ filename, sc )
+		Q sc
 	}
 	
 	#; change events  - beforeload, aftersave, aftercompile
