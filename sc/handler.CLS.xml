@@ -207,6 +207,8 @@ return true for ignore code</Description>
 <ReturnType>%Boolean</ReturnType>
 <Implementation><![CDATA[
 	Q:$e(..code)="%" 1 ;ignore system classes
+	Q:##class(%RoutineMgr).IsGenerated( ..code ) 1 ;ignore generated classes (from csp.page)
+	Q:##class(%RoutineMgr).IsClassGenerated( ..name ) 1 ;ignore generated classes (from csp.page)
 	Q:$p(..code,".")="INFORMATION" 1  ;ignore SQL-STANDART classes 
 	Q 0
 ]]></Implementation>
@@ -308,7 +310,7 @@ Initial export classes and routines</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	s mask = ..filemask(), workdir = ##class(options).workdir()
+	s mask = ..filemask(), workdir = ##class(sc.options).workdir()
 	s printer = ##class(sc.printer).new()
 	s sc =  ..importDir( workdir, mask, printer, .loaded )
 	Q $system.OBJ.CompileList( .loaded, "ckbr-d/multicompile" )
@@ -333,11 +335,9 @@ Initial export classes and routines</Description>
 		
 		s handler = ..%New( "", "importAll", printer )
 		s sc = handler.import( rs.Name, "k-d" ) ;"k-d" - load only
+		d printer.w( rs.Name _ " -> " _ handler.code , sc )
 		
-		if ( 'sc ) {
-			d printer.error(" Fail import " _ rs.Name )
-			Q 
-		}
+		if ( 'sc ) Quit 
 		
 		s loaded( handler.code )="" ;save name of loaded document
 				
