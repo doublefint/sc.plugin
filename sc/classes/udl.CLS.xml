@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="sc.classes.udl">
+<Description>
+export classes as plain text</Description>
+<Super>sc.classes</Super>
+<TimeCreated>63904,60106.89866</TimeCreated>
+
+<Method name="export">
+<FormalSpec>filename</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	
+	/*
+	
+	s file = ##class(%File).%New( filename )
+	s sc = file.Open( "WNUK\UTF8\" )  if 'sc {
+		d ..w( $classname()_": can't open file '"_filename_"' for export" )
+		Q sc	
+	}
+	
+	s sc = ##class(%Compiler.UDL.TextServices).GetTextAsStream( , name, .file ) 
+	
+	Q file.%Save()
+	*/
+	
+	Q $system.OBJ.Export( ..code, filename, "-d/diffexport" )
+]]></Implementation>
+</Method>
+
+<Method name="import">
+<FormalSpec>filename</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+ /*
+ 	s file = ##class(%File).%New( filename )
+	s sc = file.Open("RUK\UTF8\") Q:'sc sc 
+	
+	if ( ..ext() = "CLS" ) {
+		s sc = ##class(%Compiler.UDL.TextServices).SetTextFromStream( , ..name(), file )
+	}
+ */
+
+
+	s sc = $system.OBJ.Load( filename, "ck-d", .err, .list )
+	s:sc ..code = list
+	Q sc
+]]></Implementation>
+</Method>
+</Class>
+</Export>

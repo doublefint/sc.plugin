@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="sc.routines.udl">
+<Description>
+routin (*.inc, *.int, *.mac ) as plain text</Description>
+<Super>sc.routines</Super>
+<TimeCreated>63904,60497.185236</TimeCreated>
+
+<Method name="import">
+<FormalSpec>filename</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	/*
+		if ##class(%Routine).Exists( ..code ) {
+            s routine = ##class(%Routine).%OpenId( ..code )
+        } else {
+            s routine = ##class(%Routine).%New( ..code )
+        }
+        d routine.Clear() 
+        d routine.CopyFrom( file )
+        s sc = routine.%Save() Q:'sc sc
+
+	*/
+	
+	s sc = $system.OBJ.Load( filename, "ck-d", .err, .list )
+	s:sc ..code = list
+	Q sc
+]]></Implementation>
+</Method>
+
+<Method name="export">
+<FormalSpec>filename</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	/*
+		s sc = file.CopyFrom( ##class(%Routine).%OpenId( code ) ) 
+	*/
+	Q $system.OBJ.Export( ..code, filename, "-d/diffexport" )
+]]></Implementation>
+</Method>
+</Class>
+</Export>

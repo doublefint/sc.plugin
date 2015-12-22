@@ -92,11 +92,11 @@ get or set classname for printer</Description>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	d ..workdir( ..workdir() )
-	d ..handlers( "CLS", "sc.handler" )
-	d ..handlers( "MAC", "sc.handler.rtn" ) 
-	d ..handlers( "INT", "sc.handler.rtn" )
-	d ..handlers( "INC", "sc.handler.rtn" )
-	d ..handlers( "DFI", "sc.handler.dfi" )
+	d ..handlers( "CLS", "sc.classes" )
+	d ..handlers( "MAC", "sc.routines" ) 
+	d ..handlers( "INT", "sc.routines" )
+	d ..handlers( "INC", "sc.routines" )
+	d ..handlers( "DFI", "sc.dfi" )
 	d ..printer( "sc.printer" )
 	Q 1
 ]]></Implementation>
