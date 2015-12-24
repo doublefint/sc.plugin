@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="sc.plain.routines">
+<Description>
+routin (*.inc, *.int, *.mac ) as plain text</Description>
+<Super>sc.plain.classes</Super>
+<TimeCreated>63904,60497.185236</TimeCreated>
+
+<Method name="filemask">
+<Description>
+file mask for import </Description>
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[	Q "*.MAC;*.INT;*.INC"
+]]></Implementation>
+</Method>
+
+<Method name="import">
+<FormalSpec>filename</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	s file = ##class(%Stream.FileCharacter).%New()
+	s file.TranslateTable = "UTF8"
+	s file.Filename = filename
+	
+	s code = ..codename( filename )
+	
+	if ##class(%Routine).Exists( code ) {
+       s routine = ##class(%Routine).%OpenId( code )
+    } else {
+       s routine = ##class(%Routine).%New( code )
+    }
+    d routine.Clear() 
+    s sc = routine.CopyFromAndSave( file )
+    s:sc ..code = code
+    Q sc
+]]></Implementation>
+</Method>
+
+<Method name="export">
+<FormalSpec>filename</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	s file = ##class(%Stream.FileCharacter).%New()
+	s file.TranslateTable = "UTF8"
+	s file.Filename = filename
+	s routine = ##class(%Routine).%OpenId( ..code )
+	Q file.CopyFrom( routine )
+]]></Implementation>
+</Method>
+</Class>
+</Export>

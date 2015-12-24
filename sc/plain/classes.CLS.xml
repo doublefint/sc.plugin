@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="sc.plain.classes">
+<Description>
+export classes as plain text</Description>
+<Super>sc.classes</Super>
+<TimeCreated>63904,60106.89866</TimeCreated>
+
+<Method name="filemask">
+<Description>
+file mask for import </Description>
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[	Q "*.CLS"
+]]></Implementation>
+</Method>
+
+<Method name="filename">
+<Description>
+convert code name to file name, packages translate as directories</Description>
+<Implementation><![CDATA[
+	
+	s name = ..name, namelen = $l( name, "." ), hasPackage = ( namelen > 1 )  
+	s ext = ..ext
+		
+	s dir = ..workdir(), path = ""
+		
+	if ( hasPackage ) { ;myPackage.myClass.CLS or test.MAC
+		
+		s packages = $p( name, ".", 1, namelen - 1 )
+		s dm = "\" ; $$$IsWINDOWS
+		s path = $tr( packages, ".", dm )
+		
+		s:packages'="" dir = dir _ dm _ path
+		
+		s name = $p( name, ".", namelen  )
+		
+	}
+	
+	s sc = ##class(%File).CreateDirectoryChain( dir ) ;need for (%File).NormalizeFilename
+	s file = name _ "."_ ext
+	Q ##class(%File).NormalizeFilename( file, dir )
+]]></Implementation>
+</Method>
+
+<Method name="export">
+<FormalSpec>filename=..filename()</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	s file = ##class(%Stream.FileCharacter).%New()
+	s file.TranslateTable = "UTF8"
+	s file.Filename = filename
+	s sc = ##class(%Compiler.UDL.TextServices).GetTextAsStream( , ..code, .file ) 
+	Q file.%Save()
+]]></Implementation>
+</Method>
+
+<Method name="import">
+<FormalSpec>filename</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	s file = ##class(%Stream.FileCharacter).%New()
+	s file.TranslateTable = "UTF8"
+	s file.Filename = filename
+	
+	s code = ..codename( filename )
+	s sc = ##class(%Compiler.UDL.TextServices).SetTextFromStream( , code, file )
+	s:sc ..code = code
+]]></Implementation>
+</Method>
+
+<Method name="codename">
+<Description>
+Backward translation from filename to codename</Description>
+<FormalSpec>filename=""</FormalSpec>
+<Implementation><![CDATA[
+	Q:..code'="" ..code
+	s:filename="" filename=..filename()
+	Q ..getCodeName(filename, ..workdir())
+]]></Implementation>
+</Method>
+
+<Method name="getCodeName">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>filename,workdir</FormalSpec>
+<Implementation><![CDATA[
+	s subpath = $p(filename, workdir, 2)
+	s codename = $tr(subpath,"\",".")
+	s:$e(codename)="." $e(codename)=""
+	Q codename
+]]></Implementation>
+</Method>
+</Class>
+</Export>
