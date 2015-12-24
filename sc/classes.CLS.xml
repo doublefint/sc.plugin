@@ -39,13 +39,14 @@ for example: package.class.CLS</Description>
 
 <Property name="printer">
 <Type>sc.printer</Type>
+<InitialExpression>##class(sc.printer).new()</InitialExpression>
 </Property>
 
 <Method name="%OnNew">
 <Description><![CDATA[
 This callback method is invoked by the <METHOD>%New</METHOD> method to 
 provide notification that a new instance of an object is being created.]]></Description>
-<FormalSpec>code,event,printer:sc.printer</FormalSpec>
+<FormalSpec>code,event,printer:sc.printer=##class(sc.printer).new()</FormalSpec>
 <Private>1</Private>
 <ReturnType>%Status</ReturnType>
 <ServerOnly>1</ServerOnly>

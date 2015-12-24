@@ -9,7 +9,7 @@ Output messages </Description>
 <Parameter name="LOG">
 <Description>
 1 - main, 2 - warning, 3 - trace</Description>
-<Default>2</Default>
+<Default>3</Default>
 </Parameter>
 
 <Property name="device">
