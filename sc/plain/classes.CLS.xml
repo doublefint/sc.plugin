@@ -65,6 +65,7 @@ convert code name to file name, packages translate as directories</Description>
 	s code = ..codename( filename )
 	s sc = ##class(%Compiler.UDL.TextServices).SetTextFromStream( , code, file )
 	s:sc ..code = code
+	Q sc
 ]]></Implementation>
 </Method>
 
