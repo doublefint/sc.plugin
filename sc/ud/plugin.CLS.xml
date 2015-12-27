@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="sc.ud.plugin">
+<Super>sc.plugin</Super>
+<TimeCreated>63912,75207.910197</TimeCreated>
+
+<Method name="install">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	d ##super()
+	
+	#define handlers(%ext,%handler) d ##class(sc.options).handlers(%ext,%handler)
+	
+	$$$handlers("CLS","sc.ud.classes")
+	$$$handlers("MAC","sc.ud.routines")
+	$$$handlers("INT","sc.ud.routines")
+	$$$handlers("INC","sc.ud.routines")
+	$$$handlers("DFI","sc.dfi")
+	d ##class(sc.options).printer("sc.printer")
+	
+	Q 1
+]]></Implementation>
+</Method>
+</Class>
+</Export>

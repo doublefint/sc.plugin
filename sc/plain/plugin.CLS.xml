@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="sc.plain.plugin">
+<Description>
+Change options for plain handlers (export/import in udl format)</Description>
+<Super>sc.plugin</Super>
+<TimeCreated>63912,74723.609298</TimeCreated>
+
+<Method name="install">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	
+	d ##super()
+	
+	#define handlers( %ext, %handler ) d ##class(sc.options).handlers( %ext, %handler )
+	
+	$$$handlers("CLS", "sc.plain.classes")
+	$$$handlers("MAC", "sc.plain.routines")	
+	$$$handlers("INT", "sc.plain.routines")	
+	$$$handlers("INC", "sc.plain.routines")	
+	$$$handlers("DFI", "sc.dfi")	
+	d ##class(sc.options).printer("sc.printer")
+	
+	Quit 1
+]]></Implementation>
+</Method>
+</Class>
+</Export>

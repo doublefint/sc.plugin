@@ -84,16 +84,19 @@ Called when Studio delete code</Description>
 <FormalSpec>ns=$namespace</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
+	#; v.2015 
+	#; s sc = ##class(%Studio.SourceControl.Interface).SourceControlClassSet( $classname(), ns )
+	
 	#; workaround for 2012.2
 	s ^%SYS("SourceControlClass",ns) = $classname()
-	Q 1
 	
-	#; in 2015 
-	/*
-	s sc = ##class(%Studio.SourceControl.Interface).SourceControlClassSet( $classname(), ns )
-	s sc = sc && ##class(sc.options).init()
-	Q sc
-	*/
+	d ##class(sc.options).handlers( "CLS", "sc.classes" )
+	d ##class(sc.options).handlers( "MAC", "sc.routines" ) 
+	d ##class(sc.options).handlers( "INT", "sc.routines" )
+	d ##class(sc.options).handlers( "INC", "sc.routines" )
+	d ##class(sc.options).handlers( "DFI", "sc.dfi" )
+	d ##class(sc.options).printer( "sc.printer" )
+	Q 1
 ]]></Implementation>
 </Method>
 
@@ -102,14 +105,12 @@ Called when Studio delete code</Description>
 <FormalSpec>ns=$namespace</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
+	#; v.2015
+	#; s sc = ##class(%Studio.SourceControl.Interface).SourceControlClassSet( "", ns )
+	
 	#; workaround for 2012.2
 	s ^%SYS("SourceControlClass",ns) = ""
 	Q 1
-	
-	/*
-	s sc = ##class(%Studio.SourceControl.Interface).SourceControlClassSet( "", ns )
-	Q sc
-	*/
 ]]></Implementation>
 </Method>
 </Class>
