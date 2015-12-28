@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="sc.ud.dfi">
+<Super>sc.dfi</Super>
+<TimeCreated>63914,46390.422276</TimeCreated>
+
+<Method name="filemask">
+<Description>
+file mask for import </Description>
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[	Q "*.xml"
+]]></Implementation>
+</Method>
+
+<Method name="workdir">
+<Description>
+Base directory for export</Description>
+<ProcedureBlock>0</ProcedureBlock>
+<Implementation><![CDATA[ Q ##class(sc.options).workdir()_"\_DFI"
+]]></Implementation>
+</Method>
+
+<Method name="filename">
+<Description>
+convert code name to file name, packages translate as directories
+DFI example: BI-TechnologyTopicAnalyticsViews.pivot.DFI
+where 'pivot.DFI' - type and extensions
+TechnologyTopicAnalyticsViews - name of DFI
+BI - virtual folder</Description>
+<Implementation><![CDATA[
+	s name = ..name
+	s namelen = $l( name, "." )
+	s hasPackage = ( namelen > 2 )  ;2 - name and type 
+	s ext = ..ext
+		
+	s dir = ..workdir(), path = ""
+	
+	if ( hasPackage ) { ;has virtual folder
+		
+		s packages = $p( name, ".", 1, namelen - 2 ) ;2 - name and type
+		s dm = "\" ; $$$IsWINDOWS
+		s path = $tr( packages, ".", dm ) ; NOTE - need filename checking!	
+		
+		if ( packages'="" ) { 
+			s dir = dir _ dm _ path
+		}
+		
+		s name = $p( name, ".", namelen-1, namelen  )
+		
+	}
+	
+	s sc = ##class(%File).CreateDirectoryChain( dir ) ;need for (%File).NormalizeFilename
+	s file = name _ ".xml"
+	
+	Q ##class(%File).NormalizeFilename( file, dir )
+]]></Implementation>
+</Method>
+</Class>
+</Export>

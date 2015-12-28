@@ -16,7 +16,7 @@
 	$$$handlers("MAC","sc.ud.routines")
 	$$$handlers("INT","sc.ud.routines")
 	$$$handlers("INC","sc.ud.routines")
-	$$$handlers("DFI","sc.dfi")
+	$$$handlers("DFI","sc.ud.dfi")
 	d ##class(sc.options).printer("sc.printer")
 	
 	Q 1
