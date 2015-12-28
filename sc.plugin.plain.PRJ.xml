@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2016.1 (Build 596U)" ts="2015-12-28 12:25:47">
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2016.1 (Build 596U)" ts="2015-12-28 12:28:33">
 <Class name="sc.classes">
 <Description>
 export/import *.cls documents into/from xml files ( *.CLS.xml )</Description>
@@ -640,6 +640,180 @@ get or set classname for printer</Description>
 </Class>
 
 
+<Class name="sc.plain.classes">
+<Description>
+export classes as plain text</Description>
+<Super>sc.classes</Super>
+<TimeChanged>63911,3455.605544</TimeChanged>
+<TimeCreated>63904,60106.89866</TimeCreated>
+
+<Method name="filemask">
+<Description>
+file mask for import </Description>
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[	Q "*.CLS"
+]]></Implementation>
+</Method>
+
+<Method name="filename">
+<Description>
+convert code name to file name, packages translate as directories</Description>
+<Implementation><![CDATA[
+	
+	s name = ..name, namelen = $l( name, "." ), hasPackage = ( namelen > 1 )  
+	s ext = ..ext
+		
+	s dir = ..workdir(), path = ""
+		
+	if ( hasPackage ) { ;myPackage.myClass.CLS or test.MAC
+		
+		s packages = $p( name, ".", 1, namelen - 1 )
+		s dm = "\" ; $$$IsWINDOWS
+		s path = $tr( packages, ".", dm )
+		
+		s:packages'="" dir = dir _ dm _ path
+		
+		s name = $p( name, ".", namelen  )
+		
+	}
+	
+	s sc = ##class(%File).CreateDirectoryChain( dir ) ;need for (%File).NormalizeFilename
+	s file = name _ "."_ ext
+	Q ##class(%File).NormalizeFilename( file, dir )
+]]></Implementation>
+</Method>
+
+<Method name="export">
+<FormalSpec>filename=..filename()</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	s file = ##class(%Stream.FileCharacter).%New()
+	s file.TranslateTable = "UTF8"
+	s file.Filename = filename
+	s sc = ##class(%Compiler.UDL.TextServices).GetTextAsStream( , ..code, .file ) 
+	Q file.%Save()
+]]></Implementation>
+</Method>
+
+<Method name="import">
+<FormalSpec>filename</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	s file = ##class(%Stream.FileCharacter).%New()
+	s file.TranslateTable = "UTF8"
+	s file.Filename = filename
+	
+	s code = ..codename( filename )
+	s sc = ##class(%Compiler.UDL.TextServices).SetTextFromStream( , code, file )
+	s:sc ..code = code
+	Q sc
+]]></Implementation>
+</Method>
+
+<Method name="codename">
+<Description>
+Backward translation from filename to codename</Description>
+<FormalSpec>filename=""</FormalSpec>
+<Implementation><![CDATA[
+	Q:..code'="" ..code
+	s:filename="" filename=..filename()
+	Q ..getCodeName(filename, ..workdir())
+]]></Implementation>
+</Method>
+
+<Method name="getCodeName">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>filename,workdir</FormalSpec>
+<Implementation><![CDATA[
+	s subpath = $p(filename, workdir, 2)
+	s codename = $tr(subpath,"\",".")
+	s:$e(codename)="." $e(codename)=""
+	Q codename
+]]></Implementation>
+</Method>
+</Class>
+
+
+<Class name="sc.plain.plugin">
+<Description>
+Change options for plain handlers (export/import in udl format)</Description>
+<Super>sc.plugin</Super>
+<TimeChanged>63912,75172.588313</TimeChanged>
+<TimeCreated>63912,74723.609298</TimeCreated>
+
+<Method name="install">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	
+	d ##super()
+	
+	#define handlers( %ext, %handler ) d ##class(sc.options).handlers( %ext, %handler )
+	
+	$$$handlers("CLS", "sc.plain.classes")
+	$$$handlers("MAC", "sc.plain.routines")	
+	$$$handlers("INT", "sc.plain.routines")	
+	$$$handlers("INC", "sc.plain.routines")	
+	$$$handlers("DFI", "sc.dfi")	
+	d ##class(sc.options).printer("sc.printer")
+	
+	Quit 1
+]]></Implementation>
+</Method>
+</Class>
+
+
+<Class name="sc.plain.routines">
+<Description>
+routin (*.inc, *.int, *.mac ) as plain text</Description>
+<Super>sc.plain.classes</Super>
+<TimeChanged>63910,81765.506805</TimeChanged>
+<TimeCreated>63904,60497.185236</TimeCreated>
+
+<Method name="filemask">
+<Description>
+file mask for import </Description>
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[	Q "*.MAC;*.INT;*.INC"
+]]></Implementation>
+</Method>
+
+<Method name="import">
+<FormalSpec>filename</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	s file = ##class(%Stream.FileCharacter).%New()
+	s file.TranslateTable = "UTF8"
+	s file.Filename = filename
+	
+	s code = ..codename( filename )
+	
+	if ##class(%Routine).Exists( code ) {
+       s routine = ##class(%Routine).%OpenId( code )
+    } else {
+       s routine = ##class(%Routine).%New( code )
+    }
+    d routine.Clear() 
+    s sc = routine.CopyFromAndSave( file )
+    s:sc ..code = code
+    Q sc
+]]></Implementation>
+</Method>
+
+<Method name="export">
+<FormalSpec>filename</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	s file = ##class(%Stream.FileCharacter).%New()
+	s file.TranslateTable = "UTF8"
+	s file.Filename = filename
+	s routine = ##class(%Routine).%OpenId( ..code )
+	Q file.CopyFrom( routine )
+]]></Implementation>
+</Method>
+</Class>
+
+
 <Class name="sc.plugin">
 <Description>
 [s]ource [c]ontrol plugin for InterSystems Caché (testing in v.2016.1) 
@@ -901,158 +1075,17 @@ return true for ignore code</Description>
 </Class>
 
 
-<Class name="sc.ud.classes">
-<Description>
-Example of customizing file export - folder structure like in NLMLIB.SourceControl (@PavelCrehula.sz)</Description>
-<Super>sc.classes</Super>
-<TimeChanged>63908,64424.313326</TimeChanged>
-<TimeCreated>63908,61983.076185</TimeCreated>
-
-<Method name="workdir">
-<Description>
-Base directory for export</Description>
-<ProcedureBlock>0</ProcedureBlock>
-<Implementation><![CDATA[ Q ##super()_"\_CLS"
-]]></Implementation>
-</Method>
-
-<Method name="filemask">
-<Description>
-file mask for import </Description>
-<ClassMethod>1</ClassMethod>
-<Implementation><![CDATA[	Q "*.xml"
-]]></Implementation>
-</Method>
-
-<Method name="filename">
-<Description>
-convert code name to file name, packages translate as directories</Description>
-<Implementation><![CDATA[
-	
-	s name = ..name
-	s namelen = $l( name, "." )
-	s hasPackage = ( namelen > 1 )  
-	s ext = ..ext
-	s dm = "\" ; $$$IsWINDOWS	
-	s dir = ..workdir()
-		
-	if ( hasPackage ) { ;myPackage.myClass.CLS or test.MAC
-		
-		s packages = $p( name, ".", 1, namelen - 1 )
-		s path = $tr( packages, ".", dm )
-		s:packages'="" dir = dir _ dm _ path
-		s name = $p( name, ".", namelen  )
-		
-	}
-	
-	s sc = ##class(%File).CreateDirectoryChain( dir ) ;need for (%File).NormalizeFilename
-	s file = name _ ".xml"
-	Q ##class(%File).NormalizeFilename( file, dir )
-]]></Implementation>
-</Method>
-</Class>
-
-
-<Class name="sc.ud.plugin">
-<Super>sc.plugin</Super>
-<TimeChanged>63913,64156.791963</TimeChanged>
-<TimeCreated>63912,75207.910197</TimeCreated>
-
-<Method name="install">
-<ClassMethod>1</ClassMethod>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	d ##super()
-	
-	#define handlers(%ext,%handler) d ##class(sc.options).handlers(%ext,%handler)
-	
-	$$$handlers("CLS","sc.ud.classes")
-	$$$handlers("MAC","sc.ud.routines")
-	$$$handlers("INT","sc.ud.routines")
-	$$$handlers("INC","sc.ud.routines")
-	$$$handlers("DFI","sc.dfi")
-	d ##class(sc.options).printer("sc.printer")
-	
-	Q 1
-]]></Implementation>
-</Method>
-</Class>
-
-
-<Class name="sc.ud.routines">
-<Description>
-For MAC,INT,INC</Description>
-<Super>sc.classes</Super>
-<TimeChanged>63913,63959.250329</TimeChanged>
-<TimeCreated>63902,60823.714383</TimeCreated>
-
-<Method name="filemask">
-<Description>
-file mask for import </Description>
-<ClassMethod>1</ClassMethod>
-<Implementation><![CDATA[	Q "*.xml;"
-]]></Implementation>
-</Method>
-
-<Method name="workdir">
-<Description>
-Base directory for export
-_RTN - for *.MAC
-_INT - for *.INT
-_INC - for *.INC</Description>
-<ProcedureBlock>0</ProcedureBlock>
-<Implementation><![CDATA[
- s subdir = $S( ..ext = "MAC": "RTN", 1: ext )	
- Q ##class(sc.options).workdir() _ "\_" _ subdir
-]]></Implementation>
-</Method>
-
-<Method name="filename">
-<Description>
-convert code name to file name, packages translate as directories</Description>
-<Implementation><![CDATA[
-	
-	s name = ..name, namelen = $l( name, "." )
-	s hasPackage = ( namelen > 1 )  
-	s ext = ..ext
-		
-	s dir = ..workdir(), path = ""
-		
-	if ( hasPackage ) { ;myPackage.myClass.CLS or test.MAC
-		
-		s packages = $p( name, ".", 1, namelen - 1 )
-		s dm = "\" ; $$$IsWINDOWS
-		s path = $tr( packages, ".", dm )
-		
-		s:packages'="" dir = dir _ dm _ path
-		
-		s name = $p( name, ".", namelen  )
-		
-	}
-	
-	s sc = ##class(%File).CreateDirectoryChain( dir ) ;need for (%File).NormalizeFilename
-	s file = name _ ".xml" 
-	Q ##class(%File).NormalizeFilename( file, dir )
-]]></Implementation>
-</Method>
-</Class>
-
-
-<Project name="sc_plugin_ud" LastModified="2015-12-28 12:25:27.281159" Target="##class(sc.handler.rtn).exportAll()" TargetType="2">
+<Project name="sc_plugin_plain" LastModified="2015-12-28 12:26:44.612303">
   <Items>
     <ProjectItem name="sc.classes" type="CLS"></ProjectItem>
     <ProjectItem name="sc.dfi" type="CLS"></ProjectItem>
     <ProjectItem name="sc.options" type="CLS"></ProjectItem>
+    <ProjectItem name="sc.plain.classes" type="CLS"></ProjectItem>
+    <ProjectItem name="sc.plain.plugin" type="CLS"></ProjectItem>
+    <ProjectItem name="sc.plain.routines" type="CLS"></ProjectItem>
     <ProjectItem name="sc.plugin" type="CLS"></ProjectItem>
     <ProjectItem name="sc.printer" type="CLS"></ProjectItem>
     <ProjectItem name="sc.routines" type="CLS"></ProjectItem>
-    <ProjectItem name="sc.ud.classes" type="CLS"></ProjectItem>
-    <ProjectItem name="sc.ud.plugin" type="CLS"></ProjectItem>
-    <ProjectItem name="sc.ud.routines" type="CLS"></ProjectItem>
   </Items>
-  <BreakPoints>
-    <BreakPoint Routine="sc.code.CLS" Offset="TestNew+3"></BreakPoint>
-    <BreakPoint Routine="sc.handler.rtn.CLS" Offset="exportAll+3"></BreakPoint>
-  </BreakPoints>
 </Project>
 </Export>

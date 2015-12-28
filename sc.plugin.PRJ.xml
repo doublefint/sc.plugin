@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2016.1 (Build 596U)" ts="2015-12-22 22:52:10">
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2016.1 (Build 596U)" ts="2015-12-28 12:24:50">
 <Class name="sc.classes">
 <Description>
 export/import *.cls documents into/from xml files ( *.CLS.xml )</Description>
 <Super>%RegisteredObject</Super>
-<TimeChanged>63908,54009.451274</TimeChanged>
+<TimeChanged>63910,82590.818972</TimeChanged>
 <TimeCreated>63890,65741.138899</TimeCreated>
 
 <Property name="event">
@@ -40,13 +40,14 @@ for example: package.class.CLS</Description>
 
 <Property name="printer">
 <Type>sc.printer</Type>
+<InitialExpression>##class(sc.printer).new()</InitialExpression>
 </Property>
 
 <Method name="%OnNew">
 <Description><![CDATA[
 This callback method is invoked by the <METHOD>%New</METHOD> method to 
 provide notification that a new instance of an object is being created.]]></Description>
-<FormalSpec>code,event,printer:sc.printer</FormalSpec>
+<FormalSpec>code,event,printer:sc.printer=##class(sc.printer).new()</FormalSpec>
 <Private>1</Private>
 <ReturnType>%Status</ReturnType>
 <ServerOnly>1</ServerOnly>
@@ -365,7 +366,7 @@ Initial export classes and routines</Description>
 Work with *.dfi documents
 %DeepSee.UserLibrary.FolderItem</Description>
 <Super>sc.classes</Super>
-<TimeChanged>63908,79467.597903</TimeChanged>
+<TimeChanged>63911,83741.82726</TimeChanged>
 <TimeCreated>63899,52452.524809</TimeCreated>
 
 <Method name="codeSet">
@@ -644,7 +645,7 @@ get or set classname for printer</Description>
 [s]ource [c]ontrol plugin for InterSystems Caché (testing in v.2016.1) 
 Just export or import to/from filesystem. Nothing more.</Description>
 <Super>%Studio.SourceControl.Base</Super>
-<TimeChanged>63908,66167.276991</TimeChanged>
+<TimeChanged>63912,75119.711782</TimeChanged>
 <TimeCreated>63294,56897.842943</TimeCreated>
 
 <Parameter name="Flags">
@@ -724,16 +725,19 @@ Called when Studio delete code</Description>
 <FormalSpec>ns=$namespace</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
+	#; v.2015 
+	#; s sc = ##class(%Studio.SourceControl.Interface).SourceControlClassSet( $classname(), ns )
+	
 	#; workaround for 2012.2
 	s ^%SYS("SourceControlClass",ns) = $classname()
-	Q 1
 	
-	#; in 2015 
-	/*
-	s sc = ##class(%Studio.SourceControl.Interface).SourceControlClassSet( $classname(), ns )
-	s sc = sc && ##class(sc.options).init()
-	Q sc
-	*/
+	d ##class(sc.options).handlers( "CLS", "sc.classes" )
+	d ##class(sc.options).handlers( "MAC", "sc.routines" ) 
+	d ##class(sc.options).handlers( "INT", "sc.routines" )
+	d ##class(sc.options).handlers( "INC", "sc.routines" )
+	d ##class(sc.options).handlers( "DFI", "sc.dfi" )
+	d ##class(sc.options).printer( "sc.printer" )
+	Q 1
 ]]></Implementation>
 </Method>
 
@@ -742,14 +746,12 @@ Called when Studio delete code</Description>
 <FormalSpec>ns=$namespace</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
+	#; v.2015
+	#; s sc = ##class(%Studio.SourceControl.Interface).SourceControlClassSet( "", ns )
+	
 	#; workaround for 2012.2
 	s ^%SYS("SourceControlClass",ns) = ""
 	Q 1
-	
-	/*
-	s sc = ##class(%Studio.SourceControl.Interface).SourceControlClassSet( "", ns )
-	Q sc
-	*/
 ]]></Implementation>
 </Method>
 </Class>
@@ -759,13 +761,13 @@ Called when Studio delete code</Description>
 <Description>
 Output messages </Description>
 <Super>%RegisteredObject</Super>
-<TimeChanged>63908,29059.830594</TimeChanged>
+<TimeChanged>63911,2265.448766</TimeChanged>
 <TimeCreated>63890,50155.078667</TimeCreated>
 
 <Parameter name="LOG">
 <Description>
 1 - main, 2 - warning, 3 - trace</Description>
-<Default>2</Default>
+<Default>1</Default>
 </Parameter>
 
 <Property name="device">
@@ -899,7 +901,7 @@ return true for ignore code</Description>
 </Class>
 
 
-<Project name="sc_plugin" LastModified="2015-12-22 18:35:10.473448" Target="##class(sc.handler.rtn).exportAll()" TargetType="2">
+<Project name="sc_plugin" LastModified="2015-12-28 12:24:13.08936" Target="##class(sc.plugin).install()" TargetType="2">
   <Items>
     <ProjectItem name="sc.classes" type="CLS"></ProjectItem>
     <ProjectItem name="sc.dfi" type="CLS"></ProjectItem>
