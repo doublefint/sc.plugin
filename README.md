@@ -30,13 +30,13 @@ Export/Import code in UDL format ( as you see in Studio )
 
 Export/Import code into subfolders: 
 
- .CLS -> WORKDIR\_CLS\*.xml
+ .CLS -> WORKDIR\\_CLS\\*.xml
  
- .MAC -> WORKDIR\_RTN\*.xml
+ .MAC -> WORKDIR\\_RTN\\*.xml
  
- .INT -> WORKDIR\_INT\*.xml
+ .INT -> WORKDIR\\_INT\\*.xml
  
- .INC -> WORKDIR\_INC\*.xml
+ .INC -> WORKDIR\\_INC\\*.xml
  
 * Import: [sc.plugin.ud.PRJ.xml](https://github.com/doublefint/sc.plugin/blob/master/sc.plugin.ud.PRJ.xml)
 * Execute: `d ##class(sc.ud.plugin).install()`
