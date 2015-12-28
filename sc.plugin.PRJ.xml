@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2016.1 (Build 596U)" ts="2015-12-28 12:24:50">
+<Export generator="Cache" version="25">
 <Class name="sc.classes">
 <Description>
 export/import *.cls documents into/from xml files ( *.CLS.xml )</Description>
 <Super>%RegisteredObject</Super>
-<TimeChanged>63910,82590.818972</TimeChanged>
 <TimeCreated>63890,65741.138899</TimeCreated>
 
 <Property name="event">
@@ -366,7 +365,6 @@ Initial export classes and routines</Description>
 Work with *.dfi documents
 %DeepSee.UserLibrary.FolderItem</Description>
 <Super>sc.classes</Super>
-<TimeChanged>63911,83741.82726</TimeChanged>
 <TimeCreated>63899,52452.524809</TimeCreated>
 
 <Method name="codeSet">
@@ -531,7 +529,6 @@ return 1 for ignore code</Description>
 <Description>
 options for sc.plugin</Description>
 <Abstract>1</Abstract>
-<TimeChanged>63908,53669.53331</TimeChanged>
 <TimeCreated>63898,78035.606329</TimeCreated>
 
 <Method name="storage">
@@ -645,7 +642,6 @@ get or set classname for printer</Description>
 [s]ource [c]ontrol plugin for InterSystems Caché (testing in v.2016.1) 
 Just export or import to/from filesystem. Nothing more.</Description>
 <Super>%Studio.SourceControl.Base</Super>
-<TimeChanged>63912,75119.711782</TimeChanged>
 <TimeCreated>63294,56897.842943</TimeCreated>
 
 <Parameter name="Flags">
@@ -761,7 +757,6 @@ Called when Studio delete code</Description>
 <Description>
 Output messages </Description>
 <Super>%RegisteredObject</Super>
-<TimeChanged>63911,2265.448766</TimeChanged>
 <TimeCreated>63890,50155.078667</TimeCreated>
 
 <Parameter name="LOG">
@@ -838,7 +833,6 @@ provide notification that a new instance of an object is being created.]]></Desc
 <Description>
 For MAC,INT,INC</Description>
 <Super>sc.classes</Super>
-<TimeChanged>63908,53946.86485</TimeChanged>
 <TimeCreated>63902,60823.714383</TimeCreated>
 
 <Method name="filemask">
@@ -901,7 +895,7 @@ return true for ignore code</Description>
 </Class>
 
 
-<Project name="sc_plugin" LastModified="2015-12-28 12:24:13.08936" Target="##class(sc.plugin).install()" TargetType="2">
+<Project name="sc_plugin" LastModified="2015-12-28 12:45:52.062236" Target="##class(sc.plugin).install()" TargetType="2">
   <Items>
     <ProjectItem name="sc.classes" type="CLS"></ProjectItem>
     <ProjectItem name="sc.dfi" type="CLS"></ProjectItem>
@@ -910,9 +904,5 @@ return true for ignore code</Description>
     <ProjectItem name="sc.printer" type="CLS"></ProjectItem>
     <ProjectItem name="sc.routines" type="CLS"></ProjectItem>
   </Items>
-  <BreakPoints>
-    <BreakPoint Routine="sc.code.CLS" Offset="TestNew+3"></BreakPoint>
-    <BreakPoint Routine="sc.handler.rtn.CLS" Offset="exportAll+3"></BreakPoint>
-  </BreakPoints>
 </Project>
 </Export>

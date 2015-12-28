@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2016.1 (Build 596U)" ts="2015-12-28 12:25:47">
+<Export generator="Cache" version="25">
 <Class name="sc.classes">
 <Description>
 export/import *.cls documents into/from xml files ( *.CLS.xml )</Description>
 <Super>%RegisteredObject</Super>
-<TimeChanged>63910,82590.818972</TimeChanged>
 <TimeCreated>63890,65741.138899</TimeCreated>
 
 <Property name="event">
@@ -366,7 +365,6 @@ Initial export classes and routines</Description>
 Work with *.dfi documents
 %DeepSee.UserLibrary.FolderItem</Description>
 <Super>sc.classes</Super>
-<TimeChanged>63911,83741.82726</TimeChanged>
 <TimeCreated>63899,52452.524809</TimeCreated>
 
 <Method name="codeSet">
@@ -531,7 +529,6 @@ return 1 for ignore code</Description>
 <Description>
 options for sc.plugin</Description>
 <Abstract>1</Abstract>
-<TimeChanged>63908,53669.53331</TimeChanged>
 <TimeCreated>63898,78035.606329</TimeCreated>
 
 <Method name="storage">
@@ -645,7 +642,6 @@ get or set classname for printer</Description>
 [s]ource [c]ontrol plugin for InterSystems Caché (testing in v.2016.1) 
 Just export or import to/from filesystem. Nothing more.</Description>
 <Super>%Studio.SourceControl.Base</Super>
-<TimeChanged>63912,75119.711782</TimeChanged>
 <TimeCreated>63294,56897.842943</TimeCreated>
 
 <Parameter name="Flags">
@@ -761,7 +757,6 @@ Called when Studio delete code</Description>
 <Description>
 Output messages </Description>
 <Super>%RegisteredObject</Super>
-<TimeChanged>63911,2265.448766</TimeChanged>
 <TimeCreated>63890,50155.078667</TimeCreated>
 
 <Parameter name="LOG">
@@ -838,7 +833,6 @@ provide notification that a new instance of an object is being created.]]></Desc
 <Description>
 For MAC,INT,INC</Description>
 <Super>sc.classes</Super>
-<TimeChanged>63908,53946.86485</TimeChanged>
 <TimeCreated>63902,60823.714383</TimeCreated>
 
 <Method name="filemask">
@@ -905,7 +899,6 @@ return true for ignore code</Description>
 <Description>
 Example of customizing file export - folder structure like in NLMLIB.SourceControl (@PavelCrehula.sz)</Description>
 <Super>sc.classes</Super>
-<TimeChanged>63908,64424.313326</TimeChanged>
 <TimeCreated>63908,61983.076185</TimeCreated>
 
 <Method name="workdir">
@@ -955,7 +948,6 @@ convert code name to file name, packages translate as directories</Description>
 
 <Class name="sc.ud.plugin">
 <Super>sc.plugin</Super>
-<TimeChanged>63913,64156.791963</TimeChanged>
 <TimeCreated>63912,75207.910197</TimeCreated>
 
 <Method name="install">
@@ -970,7 +962,7 @@ convert code name to file name, packages translate as directories</Description>
 	$$$handlers("MAC","sc.ud.routines")
 	$$$handlers("INT","sc.ud.routines")
 	$$$handlers("INC","sc.ud.routines")
-	$$$handlers("DFI","sc.dfi")
+	$$$handlers("DFI","sc.ud.dfi")
 	d ##class(sc.options).printer("sc.printer")
 	
 	Q 1
@@ -983,7 +975,6 @@ convert code name to file name, packages translate as directories</Description>
 <Description>
 For MAC,INT,INC</Description>
 <Super>sc.classes</Super>
-<TimeChanged>63913,63959.250329</TimeChanged>
 <TimeCreated>63902,60823.714383</TimeCreated>
 
 <Method name="filemask">
@@ -1038,7 +1029,7 @@ convert code name to file name, packages translate as directories</Description>
 </Class>
 
 
-<Project name="sc_plugin_ud" LastModified="2015-12-28 12:25:27.281159" Target="##class(sc.handler.rtn).exportAll()" TargetType="2">
+<Project name="sc_plugin_ud" LastModified="2015-12-28 12:45:55.769083" Target="##class(sc.handler.rtn).exportAll()" TargetType="2">
   <Items>
     <ProjectItem name="sc.classes" type="CLS"></ProjectItem>
     <ProjectItem name="sc.dfi" type="CLS"></ProjectItem>
@@ -1050,9 +1041,5 @@ convert code name to file name, packages translate as directories</Description>
     <ProjectItem name="sc.ud.plugin" type="CLS"></ProjectItem>
     <ProjectItem name="sc.ud.routines" type="CLS"></ProjectItem>
   </Items>
-  <BreakPoints>
-    <BreakPoint Routine="sc.code.CLS" Offset="TestNew+3"></BreakPoint>
-    <BreakPoint Routine="sc.handler.rtn.CLS" Offset="exportAll+3"></BreakPoint>
-  </BreakPoints>
 </Project>
 </Export>

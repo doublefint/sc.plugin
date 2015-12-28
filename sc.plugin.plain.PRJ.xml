@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2016.1 (Build 596U)" ts="2015-12-28 12:28:33">
+<Export generator="Cache" version="25">
 <Class name="sc.classes">
 <Description>
 export/import *.cls documents into/from xml files ( *.CLS.xml )</Description>
 <Super>%RegisteredObject</Super>
-<TimeChanged>63910,82590.818972</TimeChanged>
 <TimeCreated>63890,65741.138899</TimeCreated>
 
 <Property name="event">
@@ -366,7 +365,6 @@ Initial export classes and routines</Description>
 Work with *.dfi documents
 %DeepSee.UserLibrary.FolderItem</Description>
 <Super>sc.classes</Super>
-<TimeChanged>63911,83741.82726</TimeChanged>
 <TimeCreated>63899,52452.524809</TimeCreated>
 
 <Method name="codeSet">
@@ -531,7 +529,6 @@ return 1 for ignore code</Description>
 <Description>
 options for sc.plugin</Description>
 <Abstract>1</Abstract>
-<TimeChanged>63908,53669.53331</TimeChanged>
 <TimeCreated>63898,78035.606329</TimeCreated>
 
 <Method name="storage">
@@ -644,7 +641,6 @@ get or set classname for printer</Description>
 <Description>
 export classes as plain text</Description>
 <Super>sc.classes</Super>
-<TimeChanged>63911,3455.605544</TimeChanged>
 <TimeCreated>63904,60106.89866</TimeCreated>
 
 <Method name="filemask">
@@ -734,11 +730,62 @@ Backward translation from filename to codename</Description>
 </Class>
 
 
+<Class name="sc.plain.dfi">
+<Description>
+change codename to filename rule</Description>
+<Super>sc.dfi</Super>
+<TimeCreated>63914,46251.559116</TimeCreated>
+
+<Method name="filemask">
+<Description>
+file mask for import </Description>
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[	Q "*.DFI"
+]]></Implementation>
+</Method>
+
+<Method name="filename">
+<Description>
+convert code name to file name, packages translate as directories
+DFI example: BI-TechnologyTopicAnalyticsViews.pivot.DFI
+where 'pivot.DFI' - type and extensions
+TechnologyTopicAnalyticsViews - name of DFI
+BI - virtual folder</Description>
+<Implementation><![CDATA[
+	s name = ..name
+	s namelen = $l( name, "." )
+	s hasPackage = ( namelen > 2 )  ;2 - name and type 
+	s ext = ..ext
+		
+	s dir = ..workdir(), path = ""
+	
+	if ( hasPackage ) { ;has virtual folder
+		
+		s packages = $p( name, ".", 1, namelen - 2 ) ;2 - name and type
+		s dm = "\" ; $$$IsWINDOWS
+		s path = $tr( packages, ".", dm ) ; NOTE - need filename check!	
+		
+		if ( packages'="" ) { 
+			s dir = dir _ dm _ path
+		}
+		
+		s name = $p( name, ".", namelen - 1, namelen  )
+		
+	}
+	
+	s sc = ##class(%File).CreateDirectoryChain( dir ) ;need for (%File).NormalizeFilename
+	s file = name _ "."_ ext 
+	
+	Q ##class(%File).NormalizeFilename( file, dir )
+]]></Implementation>
+</Method>
+</Class>
+
+
 <Class name="sc.plain.plugin">
 <Description>
 Change options for plain handlers (export/import in udl format)</Description>
 <Super>sc.plugin</Super>
-<TimeChanged>63912,75172.588313</TimeChanged>
 <TimeCreated>63912,74723.609298</TimeCreated>
 
 <Method name="install">
@@ -767,7 +814,6 @@ Change options for plain handlers (export/import in udl format)</Description>
 <Description>
 routin (*.inc, *.int, *.mac ) as plain text</Description>
 <Super>sc.plain.classes</Super>
-<TimeChanged>63910,81765.506805</TimeChanged>
 <TimeCreated>63904,60497.185236</TimeCreated>
 
 <Method name="filemask">
@@ -819,7 +865,6 @@ file mask for import </Description>
 [s]ource [c]ontrol plugin for InterSystems Caché (testing in v.2016.1) 
 Just export or import to/from filesystem. Nothing more.</Description>
 <Super>%Studio.SourceControl.Base</Super>
-<TimeChanged>63912,75119.711782</TimeChanged>
 <TimeCreated>63294,56897.842943</TimeCreated>
 
 <Parameter name="Flags">
@@ -935,7 +980,6 @@ Called when Studio delete code</Description>
 <Description>
 Output messages </Description>
 <Super>%RegisteredObject</Super>
-<TimeChanged>63911,2265.448766</TimeChanged>
 <TimeCreated>63890,50155.078667</TimeCreated>
 
 <Parameter name="LOG">
@@ -1012,7 +1056,6 @@ provide notification that a new instance of an object is being created.]]></Desc
 <Description>
 For MAC,INT,INC</Description>
 <Super>sc.classes</Super>
-<TimeChanged>63908,53946.86485</TimeChanged>
 <TimeCreated>63902,60823.714383</TimeCreated>
 
 <Method name="filemask">
@@ -1075,12 +1118,13 @@ return true for ignore code</Description>
 </Class>
 
 
-<Project name="sc_plugin_plain" LastModified="2015-12-28 12:26:44.612303">
+<Project name="sc_plugin_plain" LastModified="2015-12-28 13:16:03.963565" TargetType="2">
   <Items>
     <ProjectItem name="sc.classes" type="CLS"></ProjectItem>
     <ProjectItem name="sc.dfi" type="CLS"></ProjectItem>
     <ProjectItem name="sc.options" type="CLS"></ProjectItem>
     <ProjectItem name="sc.plain.classes" type="CLS"></ProjectItem>
+    <ProjectItem name="sc.plain.dfi" type="CLS"></ProjectItem>
     <ProjectItem name="sc.plain.plugin" type="CLS"></ProjectItem>
     <ProjectItem name="sc.plain.routines" type="CLS"></ProjectItem>
     <ProjectItem name="sc.plugin" type="CLS"></ProjectItem>
