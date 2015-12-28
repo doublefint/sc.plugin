@@ -1,24 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<Class name="sc.ud.int">
+<Class name="sc.ud.routines">
 <Description>
-save into _int subdirectory of workdir</Description>
-<Super>sc.routines</Super>
-<TimeCreated>63908,62447.988135</TimeCreated>
+For MAC,INT,INC</Description>
+<Super>sc.classes</Super>
+<TimeCreated>63902,60823.714383</TimeCreated>
 
 <Method name="filemask">
 <Description>
 file mask for import </Description>
 <ClassMethod>1</ClassMethod>
-<Implementation><![CDATA[	Q "*.xml"
+<Implementation><![CDATA[	Q "*.xml;"
 ]]></Implementation>
 </Method>
 
 <Method name="workdir">
 <Description>
-Base directory for export</Description>
+Base directory for export
+_RTN - for *.MAC
+_INT - for *.INT
+_INC - for *.INC</Description>
 <ProcedureBlock>0</ProcedureBlock>
-<Implementation><![CDATA[ Q ##class(sc.options).workdir() _ "\_INT"
+<Implementation><![CDATA[
+ s subdir = $S( ..ext = "MAC": "RTN", 1: ext )	
+ Q ##class(sc.options).workdir() _ "\_" _ subdir
 ]]></Implementation>
 </Method>
 
@@ -27,8 +32,7 @@ Base directory for export</Description>
 convert code name to file name, packages translate as directories</Description>
 <Implementation><![CDATA[
 	
-	s name = ..name
-	s namelen = $l( name, "." )
+	s name = ..name, namelen = $l( name, "." )
 	s hasPackage = ( namelen > 1 )  
 	s ext = ..ext
 		
