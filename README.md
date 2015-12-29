@@ -18,4 +18,27 @@ Testing in Caché v2016, v2012.2
 
 * Explore classes in [sc.ud](https://github.com/doublefint/sc.plugin/tree/master/sc/ud) package
 * Create your own subclass of sc.classes, sc.routines, sc.dfi and override necessary methods
-* Change settings: `d ##class(sc.options).handler("CLS","MyOwn.ClassesHandler")`
+
+**sc.plain.plugin**
+
+Export/Import code in UDL format ( as you see in Studio ) 
+* Import: [sc.plugin.ud.PRJ.xml](https://github.com/doublefint/sc.plugin/blob/master/sc.plugin.ud.PRJ.xml)
+* Execute: `d ##class(sc.plain.plugin).install()`
+* Reopen Studio
+
+**sc.ud.plugin**
+
+Export/Import code into subfolders: 
+
+ .CLS -> WORKDIR\\_CLS\\*.xml
+ 
+ .MAC -> WORKDIR\\_RTN\\*.xml
+ 
+ .INT -> WORKDIR\\_INT\\*.xml
+ 
+ .INC -> WORKDIR\\_INC\\*.xml
+ 
+* Import: [sc.plugin.ud.PRJ.xml](https://github.com/doublefint/sc.plugin/blob/master/sc.plugin.ud.PRJ.xml)
+* Execute: `d ##class(sc.ud.plugin).install()`
+* Reopen Studio
+ 
