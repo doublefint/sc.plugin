@@ -16,12 +16,12 @@ Testing in Caché v2016, v2012.2
 
 **Extend**:
 
-* Explore classes in [sc.ud](https://github.com/doublefint/sc.plugin/tree/master/sc/ud) package
+* See examples in [sc.ud](https://github.com/doublefint/sc.plugin/tree/master/sc/ud) or [sc.plain - (udl)](https://github.com/doublefint/sc.plugin/tree/master/sc/plain) packages
 * Create your own subclass of sc.classes, sc.routines, sc.dfi and override necessary methods
 
 **sc.plain.plugin**
 
-Export/Import code in UDL format ( as you see in Studio ) 
+Export/Import code in *UDL* format ( plain - as you see in Studio ) 
 * Import: [sc.plain.plugin.PRJ.xml](https://github.com/doublefint/sc.plugin/blob/master/sc.plain.plugin.PRJ.xml)
 * Execute: `d ##class(sc.plain.plugin).install()`
 * Reopen Studio
@@ -38,7 +38,7 @@ Export/Import code into subfolders:
  
  .INC -> WORKDIR\\_INC\\*.xml
  
-* Import: [sc.plugin.ud.PRJ.xml](https://github.com/doublefint/sc.plugin/blob/master/sc.plugin.ud.PRJ.xml)
+* Import: [sc.ud.plugin.PRJ.xml](https://github.com/doublefint/sc.plugin/blob/master/sc.ud.plugin.PRJ.xml)
 * Execute: `d ##class(sc.ud.plugin).install()`
 * Reopen Studio
  
