@@ -22,7 +22,7 @@ Testing in Caché v2016, v2012.2
 **sc.plain.plugin**
 
 Export/Import code in UDL format ( as you see in Studio ) 
-* Import: [sc.plugin.ud.PRJ.xml](https://github.com/doublefint/sc.plugin/blob/master/sc.plugin.ud.PRJ.xml)
+* Import: [sc.plain.plugin.PRJ.xml](https://github.com/doublefint/sc.plugin/blob/master/sc.plain.plugin.PRJ.xml)
 * Execute: `d ##class(sc.plain.plugin).install()`
 * Reopen Studio
 
