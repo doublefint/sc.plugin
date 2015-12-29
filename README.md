@@ -33,7 +33,7 @@ Export/Import code into subfolders:
  *.cls -> workdir\_CLS\*.xml
  *.mac -> WORKDIR\_RTN\*.xml
  *.int -> WORKDIR\_INT\*.xml
- *.inc -> WORKDIR\\_INC\*.xml
+ *.inc -> WORKDIR\_INC\*.xml
 ```
 * Import: [sc.ud.plugin.PRJ.xml](https://github.com/doublefint/sc.plugin/blob/master/sc.ud.plugin.PRJ.xml)
 * Execute: `d ##class(sc.ud.plugin).install()`
