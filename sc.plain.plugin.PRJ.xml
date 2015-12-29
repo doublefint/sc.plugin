@@ -684,9 +684,9 @@ convert code name to file name, packages translate as directories</Description>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	s file = ##class(%Stream.FileCharacter).%New()
-	s file.TranslateTable = "UTF8"
-	s file.Filename = filename
-	s sc = ##class(%Compiler.UDL.TextServices).GetTextAsStream( , ..code, .file ) 
+	s file.Filename = filename, file.TranslateTable = "UTF8"
+	s sc = ##class(%Compiler.UDL.TextServices).GetTextAsStream( , ..name, .file ) 
+	Q:'sc sc
 	Q file.%Save()
 ]]></Implementation>
 </Method>
@@ -1118,7 +1118,7 @@ return true for ignore code</Description>
 </Class>
 
 
-<Project name="sc_plain_plugin" LastModified="2015-12-29 16:24:11.291019" TargetType="2">
+<Project name="sc_plain_plugin" LastModified="2015-12-30 00:50:04.131298">
   <Items>
     <ProjectItem name="sc.classes" type="CLS"></ProjectItem>
     <ProjectItem name="sc.dfi" type="CLS"></ProjectItem>

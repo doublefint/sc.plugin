@@ -1029,7 +1029,7 @@ convert code name to file name, packages translate as directories</Description>
 </Class>
 
 
-<Project name="sc_plugin_ud" LastModified="2015-12-28 12:45:55.769083" Target="##class(sc.handler.rtn).exportAll()" TargetType="2">
+<Project name="sc_ud_plugin" LastModified="2015-12-30 00:51:04.637004">
   <Items>
     <ProjectItem name="sc.classes" type="CLS"></ProjectItem>
     <ProjectItem name="sc.dfi" type="CLS"></ProjectItem>

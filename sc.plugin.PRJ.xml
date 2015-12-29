@@ -895,7 +895,7 @@ return true for ignore code</Description>
 </Class>
 
 
-<Project name="sc_plugin" LastModified="2015-12-28 12:45:52.062236" Target="##class(sc.plugin).install()" TargetType="2">
+<Project name="sc_plugin" LastModified="2015-12-30 00:48:47.904872">
   <Items>
     <ProjectItem name="sc.classes" type="CLS"></ProjectItem>
     <ProjectItem name="sc.dfi" type="CLS"></ProjectItem>

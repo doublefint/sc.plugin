@@ -47,9 +47,9 @@ convert code name to file name, packages translate as directories</Description>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	s file = ##class(%Stream.FileCharacter).%New()
-	s file.TranslateTable = "UTF8"
-	s file.Filename = filename
-	s sc = ##class(%Compiler.UDL.TextServices).GetTextAsStream( , ..code, .file ) 
+	s file.Filename = filename, file.TranslateTable = "UTF8"
+	s sc = ##class(%Compiler.UDL.TextServices).GetTextAsStream( , ..name, .file ) 
+	Q:'sc sc
 	Q file.%Save()
 ]]></Implementation>
 </Method>
