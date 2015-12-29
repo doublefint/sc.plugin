@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="sc.utils">
+<Description>
+some tools</Description>
+<Abstract>1</Abstract>
+<TimeCreated>63915,65387.888294</TimeCreated>
+
+<Method name="projectExport">
+<Description>
+Export project with clear breakpoints, watchpoints, target and so on</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>prjname</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+
+ s prj = ##class(%Studio.Project).%OpenId( prjname, , .sc) Q:'sc sc 
+ 
+ /// clear before export
+ s prj.Target = ""
+ s prj.TargetType = ""
+ d prj.BreakPoints.Clear()
+ d prj.WatchPoints.Clear()
+ d prj.WatchVariables.Clear()
+ 
+ s filename = ##class(sc.options).workdir() _"\" _$tr(prjname,"_",".")_".PRJ.xml"
+ w !,"** " _ filename
+ s path = ##class(%File).GetDirectory( filename )
+ s sc = ##class(%File).CreateDirectoryChain( path ) Q:'sc sc
+ 
+ Q prj.Export( filename, "-d/diffexport" )
+]]></Implementation>
+</Method>
+</Class>
+</Export>
