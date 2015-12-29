@@ -2,7 +2,7 @@
 
 By default export *.CLS, *.MAC, *.INT, *.INC, *.DFI into working directory as *.CLS.xml, *.MAC.xml, etc. in XML format 
 
-Testing in Caché v2016, v2012.2
+Testing in Ensemble v.2014.1, Caché v.2015.2 - 2016.1
 
 **Installation**:
 
@@ -19,14 +19,14 @@ Testing in Caché v2016, v2012.2
 * See examples in [sc.ud](https://github.com/doublefint/sc.plugin/tree/master/sc/ud) or [sc.plain - (udl)](https://github.com/doublefint/sc.plugin/tree/master/sc/plain) packages
 * Create your own subclass of sc.classes, sc.routines, sc.dfi and override necessary methods
 
-**sc.plain.plugin**
+###sc.plain.plugin
 
 Export/Import code in *UDL* format ( plain - as you see in Studio ) 
 * Import: [sc.plain.plugin.PRJ.xml](https://github.com/doublefint/sc.plugin/blob/master/sc.plain.plugin.PRJ.xml)
 * Execute: `d ##class(sc.plain.plugin).install()`
 * Reopen Studio
 
-**sc.ud.plugin**
+###sc.ud.plugin
 
 Export/Import code into subfolders: 
 ```
