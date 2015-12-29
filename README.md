@@ -1,8 +1,12 @@
-###Extendable source control plugin for InterSystems Caché Studio
+###sc.plugin
 
-By default export *.CLS, *.MAC, *.INT, *.INC, *.DFI into working directory as *.CLS.xml, *.MAC.xml, etc. in XML format 
+Extendable s[ource] c[ontrol] plugin for InterSystems Caché Studio
 
-Testing in Ensemble v.2014.1, Caché v.2015.2 - 2016.1
+Export/Import *.cls, *.mac, *.int, *.inc into filesystem
+
+For example, `test.test.CLS` will be exported as `workdir\test\test.CLS.xml`
+
+Testing in Ensemble v.2014.1, Caché v.2015.2 - 2016.1 on Windows 7x64
 
 **Installation**:
 
