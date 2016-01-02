@@ -10,6 +10,7 @@ Testing in Ensemble v.2014.1, Caché v.2015.2 - 2016.1 on Windows 7x64
 
 **Installation**:
 
+* Backup first!!!
 * Import: [sc.plugin.PRJ.xml](https://github.com/doublefint/sc.plugin/blob/master/sc.plugin.PRJ.xml)
 * Execute: `d ##class(sc.plugin).install()`
 * _(Optional)_ Setup working directory: `w ##class(sc.options).workdir( "c:\YourWorkingDirectory\" )`
