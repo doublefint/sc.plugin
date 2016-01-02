@@ -10,7 +10,7 @@ Testing in Ensemble v.2014.1, Caché v.2015.2 - 2016.1 on Windows 7x64
 
 **Installation**:
 
-* Backup first!!!
+* **Backup** first !!!
 * Import: [sc.plugin.PRJ.xml](https://github.com/doublefint/sc.plugin/blob/master/sc.plugin.PRJ.xml)
 * Execute: `d ##class(sc.plugin).install()`
 * _(Optional)_ Setup working directory: `w ##class(sc.options).workdir( "c:\YourWorkingDirectory\" )`
@@ -26,7 +26,7 @@ Testing in Ensemble v.2014.1, Caché v.2015.2 - 2016.1 on Windows 7x64
 
 ###sc.plain.plugin
 
-Export/Import code in *UDL* format ( plain - as you see in Studio ).
+Export/Import code in *UDL* format ( plain - as you see in Studio ). Require Caché v.2014.1 or greater.
 For example, `test.test.CLS` will be exported as `workdir\test\test.CLS`
 
 * Import: [sc.plain.plugin.PRJ.xml](https://github.com/doublefint/sc.plugin/blob/master/sc.plain.plugin.PRJ.xml)
