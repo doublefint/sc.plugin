@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache">
+<Class name="test.sc.api">
+<Abstract>1</Abstract>
+<ProcedureBlock>1</ProcedureBlock>
+<Super>test.view</Super>
+<TimeCreated>63919,31812.566359</TimeCreated>
+
+<Method name="TestVersion">
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[	d ..AssertEquals( 2005.0, ##class(sc.legacy).cacheVersion(), "Should detect version" )
+]]></Implementation>
+</Method>
+
+<Method name="TestClassExport">
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[
+	s export = ##class(sc.legacy).classExport("sc.classes.CLS", "sc.classes.CLS.xml")
+	d ..AssertEquals( 1, export, "Should export class" )
+]]></Implementation>
+</Method>
+
+<Method name="TestIsGenerated">
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[
+	s isGenerated = ##class(sc.legacy).codeIsGenerated("sc.classes.CLS")
+	d ..AssertEquals( 0, isGenerated, "Should detect generated class or routines" )		
+	
+	s isGenerated = ##class(sc.legacy).codeIsGenerated("sc.classes.1.INT")
+	d ..AssertEquals( 1, isGenerated, "Should detect generated class routines" )
+]]></Implementation>
+</Method>
+</Class>
+</Export>

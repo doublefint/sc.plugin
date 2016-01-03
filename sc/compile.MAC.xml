@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache">
+<Routine name="sc.compile" type="MAC" languagemode="0" timestamp="63920,46685"><![CDATA[
+compile( list )  Q $system.OBJ.CompileList( list, "cukrby/multicompile" )
+]]></Routine>
+</Export>

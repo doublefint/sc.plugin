@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache">
+<Class name="sc.legacy">
+<Description>
+Compatibility with legacy version </Description>
+<Abstract>1</Abstract>
+<IncludeCode>%cspBuild</IncludeCode>
+<ProcedureBlock>1</ProcedureBlock>
+<TimeCreated>63920,47834.762716</TimeCreated>
+
+<Method name="cacheVersion">
+<Description>
+return version like number, for example: 2005.0, 2005.1, 2005.2, 2008.1 and etc.</Description>
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[
+	s version = +$system.Version.GetNumber() ;5.0
+	s mask = "2000.0", len = $l(mask)
+	s version = $j(version, len, 1) ; "   5.0"
+	
+	for i=1:1:len {
+		
+		s char = $e( version, i )
+		if ( char '= " " )  continue
+		s $e( version, i ) = $e( mask, i )
+		
+	}
+	
+	Q +version
+]]></Implementation>
+</Method>
+
+<Method name="sourceControlClass">
+<Description><![CDATA[
+Set source control class <var>class</var> for namespace <var>ns</var>
+$zu(5) legacy equivalent of $namespace]]></Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>class,ns=$zu(5)</FormalSpec>
+<Implementation><![CDATA[
+	
+	#; v.2015:  s sc = ##class(%Studio.SourceControl.Interface).SourceControlClassSet( $classname(), ns )
+	
+	#define SCC ^%SYS("SourceControlClass", ns )
+	
+	if $d( class ) { ; workaround for 2012.2
+		s $$$SCC = class
+	} else {
+		Q $g( $$$SCC )
+	}
+]]></Implementation>
+</Method>
+
+<Method name="classExport">
+<Description>
+Cache 5.0 don't have '/diffexport' qualifier</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>class,filename</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	
+	if ( ..cacheVersion() >= 2007.1) Q ##class(%SYSTEM.OBJ).Export( class, filename, "-d/diffexport" )
+	
+	s sc = $system.OBJ.Export( class, filename, "-d" ) Q:'sc sc
+	Q ..classExportDiff( filename )
+]]></Implementation>
+</Method>
+
+<Method name="classExportDiff">
+<Description>
+Cache 5.0 don't have "/diffexport" qualifier
+rewrite export file, remove version information
+link: inspired by code from CosUnit </Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>filename:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+
+	s file = ##class(%FileCharacterStream).%New()
+	s file.Filename = filename
+	s temp = ##class(%File).%New( filename_".tmp" )
+	s sc = temp.Open( "WNU" ) Q:'sc sc 
+			
+	/// $c(34) - > ["]
+	#define q $c(34)	
+	#define find(%match) $l(%match)+1 = $f(line,%match)
+	
+	
+	while 'file.AtEnd {
+		
+		s line = file.ReadLine()
+		
+		if $$$find("<Checksum") continue
+		if $$$find("<TimeChanged") continue
+		if $$$find("<ClassType/>") continue
+		if $$$find("<ClassDefinitionError>0</ClassDefinitionError>") continue
+		
+		s match = "<Parameter name="_$$$q_"TRUNCATE"_$$$q_" value="_$$$q_"1"_$$$q_"/>"
+		if $$$find(match) continue
+		
+		s match = "<Export generator="_$$$q_"Cache"_$$$q
+		if $$$find(match) s line = match _ ">"	;remove trailing attributes 
+		
+		d temp.WriteLine( line )
+		
+	} k file
+	
+	d temp.Close()
+	
+	s sc = ##class(%File).Delete(filename) Q:'sc sc
+	s sc = ##class(%File).Rename( temp.Name, filename)
+	
+	Q sc
+]]></Implementation>
+</Method>
+
+<Method name="codeIsGenerated">
+<Description><![CDATA[
+is class/routine <var>code</var>  generated]]></Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>code:%String</FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	
+	if ( ..cacheVersion() >= 2008.2 ) Q ##class(%RoutineMgr).IsGenerated( code )
+	
+	s len = $l(code,".")
+	s name = $p(code ,".",1,len-1) Q:name="" 0
+	s ext=$zcvt( $p( code, ".", len ), "U" )
+	
+	if ext="PRJ" Quit 0
+	if ##class(%RoutineMgr).IsCSPName( code ) Q 0
+	
+	#; ???
+	if ##class(%RoutineMgr).UserType( code, .cls ) { 
+		Q $zobjclassmethod(cls,"IsGenerated", code )
+	}
+	
+	s order = "CSP,CLS,MAC,INT" ;compile order
+	s codePos = $f(order,ext)
+	
+	#;w !,"ext: ", ext
+	#;w !,"codePos: ", codePos
+	
+	s prev = ##class(%RoutineMgr).GetOther( name, ext, -1 ) 
+	if ( prev = "" ) Q 0
+	
+	s prevExt = $p( prev, ".", $l( prev, "." ) )
+	s prevExt = $zcvt( prevExt, "U" )
+	
+	s prevPos = $f( order, prevExt )
+	#;w !,"prevExt: ", prevExt
+	#;w !,"prevPos: ", prevPos
+		
+	Q ( codePos > prevPos )
+]]></Implementation>
+</Method>
+</Class>
+</Export>

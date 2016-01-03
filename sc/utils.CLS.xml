@@ -31,5 +31,15 @@ Export project with clear breakpoints, watchpoints, target and so on</Descriptio
  Q prj.Export( filename, "-d/diffexport" )
 ]]></Implementation>
 </Method>
+
+<Method name="build">
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[
+	s projects = $lb("sc_plugin","sc_plain_plugin","sc_ud_plugin")	
+	s p=0,prj="" while $LISTNEXT(projects, p, prj){
+		d ..projectExport(prj)	
+	}
+]]></Implementation>
+</Method>
 </Class>
 </Export>

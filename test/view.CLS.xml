@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache">
+<Class name="test.view">
+<ProcedureBlock>1</ProcedureBlock>
+<Super>%CSP.Page</Super>
+<TimeCreated>63919,31812.563344</TimeCreated>
+
+<Method name="OnPage">
+<Description><![CDATA[
+Event handler for <B>PAGE</B> event: this is invoked in order to  
+generate the content of a csp page.]]></Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<ServerOnly>1</ServerOnly>
+<Implementation><![CDATA[
+	&html<<html><head>
+	<style type='text/css'>
+	.fail { background-color: red; }
+	</style>
+	</head><body>>
+	s classname = ..%ClassName(1)
+	
+	s cc = ##class(%Dictionary.CompiledClass).%OpenId( classname )
+	s test = "Test"
+	s key = "" for { s mc = cc.Methods.GetNext(.key) Q:key=""
+		s method = mc.Name 
+		if $f( method, test)'=5 continue 
+		w "<div style='padding:0 0 1em 1em'><br/><b>", $p( method, test, 2 ),"</b>"
+		d $zobjclassmethod( classname, method )
+		w "</div>"
+	}
+	
+	
+	Quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="AssertEquals">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>left,right,msg</FormalSpec>
+<Implementation><![CDATA[
+	s sc = (left = right), ok = $s(sc=1:"Ok!",1:"<b>FAIL :(</b>" )
+	s cls = $s( sc=1: "ok", 1:"fail"  ) 
+	w "<div class='",cls,"'>", msg,": ", ok, "</div>"
+]]></Implementation>
+</Method>
+</Class>
+</Export>

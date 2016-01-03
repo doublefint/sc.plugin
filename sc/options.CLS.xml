@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25">
+<Export generator="Cache">
 <Class name="sc.options">
 <Description>
-options for sc.plugin</Description>
+options for sc.plugin
+</Description>
 <Abstract>1</Abstract>
+<ProcedureBlock>1</ProcedureBlock>
 <TimeCreated>63898,78035.606329</TimeCreated>
+
+<Method name="Test">
+<ClassMethod>1</ClassMethod>
+</Method>
 
 <Method name="storage">
 <ClassMethod>1</ClassMethod>
@@ -67,7 +73,7 @@ get or set handlers for event
 	
 	s storage = ..storage(), key = "ext"
 	
-	s:$d( handlers ) @storage@( key, ext ) = handlers ;set mode
+	s:$d(handlers) @storage@( key, ext ) = handlers ;set mode
 	
 	s handlers = $g( @storage@( key, ext ) ) ;get mode
 	

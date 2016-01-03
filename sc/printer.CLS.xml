@@ -3,13 +3,14 @@
 <Class name="sc.printer">
 <Description>
 Output messages </Description>
+<ProcedureBlock>1</ProcedureBlock>
 <Super>%RegisteredObject</Super>
 <TimeCreated>63890,50155.078667</TimeCreated>
 
 <Parameter name="LOG">
 <Description>
-1 - main, 2 - warning, 3 - trace</Description>
-<Default>1</Default>
+1 - error, 2 - warning, 3 - trace </Description>
+<Default>3</Default>
 </Parameter>
 
 <Property name="device">
@@ -18,7 +19,6 @@ Output messages </Description>
 
 <Method name="%OnNew">
 <Description><![CDATA[
-test
 This callback method is invoked by the <METHOD>%New</METHOD> method to 
 provide notification that a new instance of an object is being created.]]></Description>
 <FormalSpec>device=$io</FormalSpec>
@@ -26,7 +26,7 @@ provide notification that a new instance of an object is being created.]]></Desc
 <ReturnType>%Status</ReturnType>
 <ServerOnly>1</ServerOnly>
 <Implementation><![CDATA[
-	s ..device = device 
+	s ..device = $g(device,$io)
 	Q 1
 ]]></Implementation>
 </Method>
@@ -35,30 +35,53 @@ provide notification that a new instance of an object is being created.]]></Desc
 <ClassMethod>1</ClassMethod>
 <ReturnType>printer</ReturnType>
 <Implementation><![CDATA[
+	
 	s printer = ..%New($io) 
+	
 	s custom = ##class(options).printer()
+	
 	Q:custom="" printer
-	try {
-		s printer = $classmethod( custom, "%New",$io)
-	} catch {
-		s printer = ..%New($io)
-	}
+	
+	s $zt = "newErr"
+	
+	s printer = $zobjclassmethod( custom, "%New" )
+	
 	Q printer
+	
+newErr
+	s $zt = "", $ze = "" 
+	Q ..%New()
 ]]></Implementation>
 </Method>
 
 <Method name="w">
-<FormalSpec>msg,sc=""</FormalSpec>
+<FormalSpec>msg,sc=1</FormalSpec>
 <Implementation><![CDATA[
 	s io = $io	
-	use ..device w !,"** ", msg w:sc'="" " ", $S(+sc=1: "Ok!", 1:"FAIL")
+
+	s status = "Ok!", err = "", elist = ""
+	
+	if 'sc {
+		
+		s status = "FAIL :( "
+		
+		d ##class(%SYSTEM.Status).DecomposeStatus(sc, .elist)
+		
+		s status = status _ $g(elist(1))
+		
+	}
+	
+	use ..device w !,"* ", msg, " ", status
+	
 	use io
 ]]></Implementation>
 </Method>
 
 <Method name="error">
 <FormalSpec>msg</FormalSpec>
-<Implementation><![CDATA[	d ..w(msg)
+<Implementation><![CDATA[
+	
+	d ..w(msg)
 ]]></Implementation>
 </Method>
 

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="test.sc.classes">
+<ProcedureBlock>1</ProcedureBlock>
+<Super>%UnitTest.TestCase</Super>
+<TimeCreated>63915,54966.478453</TimeCreated>
+
+<Method name="TestcodeSet">
+<Implementation><![CDATA[]]></Implementation>
+</Method>
+
+<Method name="Testexport">
+<Implementation><![CDATA[]]></Implementation>
+</Method>
+
+<Method name="TestexportAll">
+<Implementation><![CDATA[]]></Implementation>
+</Method>
+
+<Method name="TestextExtract">
+<Implementation><![CDATA[]]></Implementation>
+</Method>
+
+<Method name="TestfileDelete">
+<Implementation><![CDATA[]]></Implementation>
+</Method>
+
+<Method name="Testfilemask">
+<Implementation><![CDATA[]]></Implementation>
+</Method>
+
+<Method name="Testfilename">
+<Implementation><![CDATA[]]></Implementation>
+</Method>
+
+<Method name="Testhandle">
+<Implementation><![CDATA[]]></Implementation>
+</Method>
+
+<Method name="Testignore">
+<Implementation><![CDATA[]]></Implementation>
+</Method>
+
+<Method name="Testimport">
+<Implementation><![CDATA[]]></Implementation>
+</Method>
+
+<Method name="TestimportAll">
+<Implementation><![CDATA[]]></Implementation>
+</Method>
+
+<Method name="TestimportDir">
+<Implementation><![CDATA[]]></Implementation>
+</Method>
+
+<Method name="TestnameExtract">
+<Implementation><![CDATA[]]></Implementation>
+</Method>
+
+<Method name="Teston">
+<Implementation><![CDATA[]]></Implementation>
+</Method>
+
+<Method name="TesttsCode">
+<Implementation><![CDATA[]]></Implementation>
+</Method>
+
+<Method name="TesttsFile">
+<Implementation><![CDATA[]]></Implementation>
+</Method>
+
+<Method name="Testworkdir">
+<Implementation><![CDATA[]]></Implementation>
+</Method>
+</Class>
+</Export>

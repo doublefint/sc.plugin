@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25">
+<Export generator="Cache">
 <Class name="sc.plugin">
 <Description>
 [s]ource [c]ontrol plugin for InterSystems Caché (testing in v.2016.1) 
-Just export or import to/from filesystem. Nothing more.</Description>
+Just export or import to/from filesystem. Nothing more.
+</Description>
+<ProcedureBlock>1</ProcedureBlock>
 <Super>%Studio.SourceControl.Base</Super>
 <TimeCreated>63294,56897.842943</TimeCreated>
+
+<Method name="Test">
+<ClassMethod>1</ClassMethod>
+</Method>
 
 <Parameter name="Flags">
 <Description><![CDATA[
@@ -81,14 +87,12 @@ Called when Studio delete code</Description>
 
 <Method name="install">
 <ClassMethod>1</ClassMethod>
-<FormalSpec>ns=$namespace</FormalSpec>
+<FormalSpec>ns=$zu(5)</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	#; v.2015 
-	#; s sc = ##class(%Studio.SourceControl.Interface).SourceControlClassSet( $classname(), ns )
 	
-	#; workaround for 2012.2
-	s ^%SYS("SourceControlClass",ns) = $classname()
+	s classname = ..%ClassName(1) ;legacy equivalent of $classname()
+	d ##class(sc.legacy).sourceControlClass( classname )
 	
 	d ##class(sc.options).handlers( "CLS", "sc.classes" )
 	d ##class(sc.options).handlers( "MAC", "sc.routines" ) 
@@ -96,20 +100,17 @@ Called when Studio delete code</Description>
 	d ##class(sc.options).handlers( "INC", "sc.routines" )
 	d ##class(sc.options).handlers( "DFI", "sc.dfi" )
 	d ##class(sc.options).printer( "sc.printer" )
+	
 	Q 1
 ]]></Implementation>
 </Method>
 
 <Method name="uninstall">
 <ClassMethod>1</ClassMethod>
-<FormalSpec>ns=$namespace</FormalSpec>
+<FormalSpec>ns=$zu(5)</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	#; v.2015
-	#; s sc = ##class(%Studio.SourceControl.Interface).SourceControlClassSet( "", ns )
-	
-	#; workaround for 2012.2
-	s ^%SYS("SourceControlClass",ns) = ""
+	d ##class(sc.legacy).sourceControlClass( "" )
 	Q 1
 ]]></Implementation>
 </Method>
